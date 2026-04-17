@@ -4,6 +4,7 @@ import {
   House,
   Map,
   UserRound,
+  Landmark,        // 新增导入
   type LucideIcon,
 } from 'lucide-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
@@ -19,6 +20,7 @@ const navItems: Array<{
   { icon: House, label: '首页', match: '/', path: '/' },
   { icon: Map, label: '地图', match: '/map', path: '/map?scope=national' },
   { icon: CalendarDays, label: '行程', match: '/itinerary', path: '/itinerary' },
+  { icon: Landmark, label: '世界遗产', match: '/heritage', path: '/heritage' },  // 新增
   { icon: UserRound, label: '个人中心', match: '/profile', path: '/profile' },
 ]
 

@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage'
 import { PanoramaPage } from './pages/PanoramaPage'
 import { PlannerPage } from './pages/PlannerPage'
 import { ProfilePage } from './pages/ProfilePage'
+import WorldHeritagePage from './pages/WorldHeritagePage'   // 新增导入
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/panorama" element={<PanoramaPage />} />
             <Route path="/panorama/:poiId" element={<PanoramaPage />} />
+            <Route path="/heritage" element={<WorldHeritagePage />} />   {/* 新增路由 */}
             <Route path="/explore" element={<Navigate replace to="/map?scope=national" />} />
             <Route path="/planner" element={<Navigate replace to="/itinerary" />} />
             <Route path="*" element={<Navigate replace to="/" />} />
