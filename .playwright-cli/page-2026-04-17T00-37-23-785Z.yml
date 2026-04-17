@@ -1,0 +1,89 @@
+- generic [ref=e3]:
+  - banner "主导航" [ref=e4]:
+    - generic [ref=e5]:
+      - link "中国文化遗产导览 真实地图 · AI 行程规划" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e8]
+        - generic [ref=e11]:
+          - strong [ref=e12]: 中国文化遗产导览
+          - generic [ref=e13]: 真实地图 · AI 行程规划
+      - navigation "模块入口" [ref=e14]:
+        - link "首页" [ref=e15] [cursor=pointer]:
+          - /url: /
+          - img [ref=e16]
+          - generic [ref=e19]: 首页
+        - link "地图" [ref=e20] [cursor=pointer]:
+          - /url: /map?scope=national
+          - img [ref=e21]
+          - generic [ref=e23]: 地图
+        - link "行程" [ref=e24] [cursor=pointer]:
+          - /url: /itinerary
+          - img [ref=e25]
+          - generic [ref=e27]: 行程
+        - link "个人中心" [ref=e28] [cursor=pointer]:
+          - /url: /profile
+          - img [ref=e29]
+          - generic [ref=e32]: 个人中心
+      - generic [ref=e34]:
+        - button "登录" [ref=e35] [cursor=pointer]
+        - button "注册" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - article [ref=e41]:
+            - img "杭州西湖傍晚湖景" [ref=e43]
+            - generic [ref=e47]:
+              - generic [ref=e48]: 江南水岸
+              - heading "中国文化遗产" [level=1] [ref=e49]
+              - paragraph [ref=e50]: 从湖山、园林到古街灯火，把中国文化遗产的城市气质先铺开，再一站一站慢慢进入。
+              - link "开始探索" [ref=e52] [cursor=pointer]:
+                - /url: /map?scope=national
+                - text: 开始探索
+                - img [ref=e53]
+          - article [ref=e55]:
+            - img "西藏布达拉宫" [ref=e57]
+            - generic [ref=e61]:
+              - generic [ref=e62]: 高原遗产
+              - heading "中国文化遗产" [level=1] [ref=e63]
+              - paragraph [ref=e64]: 高原遗产、宗教建筑和城市天际线交织在一起，适合承接全国视角下更开阔的文化导览。
+              - link "开始探索" [ref=e66] [cursor=pointer]:
+                - /url: /map?scope=national
+                - text: 开始探索
+                - img [ref=e67]
+          - article [ref=e69]:
+            - img "慕田峪长城全景" [ref=e71]
+            - generic [ref=e75]:
+              - generic [ref=e76]: 山脊古迹
+              - heading "中国文化遗产" [level=1] [ref=e77]
+              - paragraph [ref=e78]: 长城适合做文化遗产入口页的第二层气质，让用户一眼就知道这不是普通旅游站，而是导览站。
+              - link "开始探索" [ref=e80] [cursor=pointer]:
+                - /url: /map?scope=national
+                - text: 开始探索
+                - img [ref=e81]
+          - article [ref=e83]:
+            - img "北京天坛" [ref=e85]
+            - generic [ref=e89]:
+              - generic [ref=e90]: 礼制建筑
+              - heading "中国文化遗产" [level=1] [ref=e91]
+              - paragraph [ref=e92]: 礼制建筑、城市轴线和花园前景组合起来，会让首页既有文化感，也不会过分沉重。
+              - link "开始探索" [ref=e94] [cursor=pointer]:
+                - /url: /map?scope=national
+                - text: 开始探索
+                - img [ref=e95]
+        - generic [ref=e97]:
+          - button "上一张" [ref=e98] [cursor=pointer]:
+            - img [ref=e99]
+          - generic [ref=e101]:
+            - button "切换到西湖暮色" [ref=e102] [cursor=pointer]
+            - button "切换到布达拉宫" [ref=e103] [cursor=pointer]
+            - button "切换到慕田峪长城" [ref=e104] [cursor=pointer]
+            - button "切换到天坛" [ref=e105] [cursor=pointer]
+          - button "下一张" [ref=e106] [cursor=pointer]:
+            - img [ref=e107]
+      - generic [ref=e110]:
+        - heading "热门景点" [level=2] [ref=e111]
+        - link "查看全部" [ref=e112] [cursor=pointer]:
+          - /url: /map?scope=national
+          - text: 查看全部
+          - img [ref=e113]

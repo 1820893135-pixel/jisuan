@@ -1,0 +1,163 @@
+- generic [ref=e3]:
+  - generic "账号入口":
+    - generic [ref=e4]:
+      - button "登录" [ref=e5] [cursor=pointer]
+      - button "注册" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - article [ref=e10]:
+          - img "杭州西湖傍晚湖景" [ref=e12]
+          - generic [ref=e15]:
+            - generic [ref=e16]:
+              - generic [ref=e17]: 江南水岸
+              - heading "中国文化遗产" [level=1] [ref=e18]
+              - paragraph [ref=e19]: 从湖山、园林到古街灯火，把中国文化遗产的城市气质先铺开，再一站一站慢慢进入。
+              - link "开始探索" [ref=e21] [cursor=pointer]:
+                - /url: /map
+                - text: 开始探索
+                - img [ref=e22]
+            - generic [ref=e24]:
+              - strong [ref=e25]: 西湖暮色
+              - paragraph [ref=e26]: 杭州西湖的湖面层次和远山线条，很适合作为导览首页的开场画面。
+              - link "图片来源：Wikimedia Commons" [ref=e27] [cursor=pointer]:
+                - /url: https://commons.wikimedia.org/wiki/File:West_Lake_62995-Hangzhou_(49152804977).jpg
+        - article [ref=e28]:
+          - img "西藏布达拉宫" [ref=e30]
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: 高原遗产
+              - heading "中国文化遗产" [level=1] [ref=e36]
+              - paragraph [ref=e37]: 高原遗产、宗教建筑和城市天际线交织在一起，适合承接全国视角下更开阔的文化导览。
+              - link "开始探索" [ref=e39] [cursor=pointer]:
+                - /url: /map
+                - text: 开始探索
+                - img [ref=e40]
+            - generic [ref=e42]:
+              - strong [ref=e43]: 布达拉宫
+              - paragraph [ref=e44]: 把高原空间感拉进首页，能让整站不只停留在单一城市的印象里。
+              - link "图片来源：Wikimedia Commons" [ref=e45] [cursor=pointer]:
+                - /url: https://commons.wikimedia.org/wiki/File:Potala_Palace,_Tibet_(38938132080).jpg
+        - article [ref=e46]:
+          - img "慕田峪长城全景" [ref=e48]
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]: 山脊古迹
+              - heading "中国文化遗产" [level=1] [ref=e54]
+              - paragraph [ref=e55]: 长城适合做文化遗产入口页的第二层气质，让用户一眼就知道这不是普通旅游站，而是导览站。
+              - link "开始探索" [ref=e57] [cursor=pointer]:
+                - /url: /map
+                - text: 开始探索
+                - img [ref=e58]
+            - generic [ref=e60]:
+              - strong [ref=e61]: 慕田峪长城
+              - paragraph [ref=e62]: 用横向山脊和城墙线条做轮播图，滑动时视觉节奏会更强。
+              - link "图片来源：Wikimedia Commons" [ref=e63] [cursor=pointer]:
+                - /url: https://commons.wikimedia.org/wiki/File:Pano_mutianyu_great_wall.jpg
+        - article [ref=e64]:
+          - img "北京天坛" [ref=e66]
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: 礼制建筑
+              - heading "中国文化遗产" [level=1] [ref=e72]
+              - paragraph [ref=e73]: 礼制建筑、城市轴线和花园前景组合起来，会让首页既有文化感，也不会过分沉重。
+              - link "开始探索" [ref=e75] [cursor=pointer]:
+                - /url: /map
+                - text: 开始探索
+                - img [ref=e76]
+            - generic [ref=e78]:
+              - strong [ref=e79]: 天坛
+              - paragraph [ref=e80]: 适合放在轮播尾帧，收住前面几张更强烈的风景和高原画面。
+              - link "图片来源：Wikimedia Commons" [ref=e81] [cursor=pointer]:
+                - /url: https://commons.wikimedia.org/wiki/File:Temple_of_Heaven_(54391733019).jpg
+      - generic [ref=e82]:
+        - button "上一张" [ref=e83] [cursor=pointer]:
+          - img [ref=e84]
+        - generic [ref=e86]:
+          - button "切换到西湖暮色" [ref=e87] [cursor=pointer]
+          - button "切换到布达拉宫" [ref=e88] [cursor=pointer]
+          - button "切换到慕田峪长城" [ref=e89] [cursor=pointer]
+          - button "切换到天坛" [ref=e90] [cursor=pointer]
+        - button "下一张" [ref=e91] [cursor=pointer]:
+          - img [ref=e92]
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - heading "切换城市" [level=2] [ref=e96]
+        - generic [ref=e97]: 高德路线已连接
+      - generic [ref=e98]:
+        - button "北京市" [ref=e99] [cursor=pointer]
+        - button "天津市" [ref=e100] [cursor=pointer]
+        - button "河北省" [ref=e101] [cursor=pointer]
+        - button "山西省" [ref=e102] [cursor=pointer]
+        - button "内蒙古自治区" [ref=e103] [cursor=pointer]
+        - button "辽宁省" [ref=e104] [cursor=pointer]
+        - button "吉林省" [ref=e105] [cursor=pointer]
+        - button "黑龙江省" [ref=e106] [cursor=pointer]
+        - button "上海市" [ref=e107] [cursor=pointer]
+        - button "江苏省" [ref=e108] [cursor=pointer]
+        - button "浙江省" [ref=e109] [cursor=pointer]
+        - button "安徽省" [ref=e110] [cursor=pointer]
+        - button "福建省" [ref=e111] [cursor=pointer]
+        - button "江西省" [ref=e112] [cursor=pointer]
+        - button "山东省" [ref=e113] [cursor=pointer]
+        - button "河南省" [ref=e114] [cursor=pointer]
+        - button "湖北省" [ref=e115] [cursor=pointer]
+        - button "湖南省" [ref=e116] [cursor=pointer]
+        - button "广东省" [ref=e117] [cursor=pointer]
+        - button "广西壮族自治区" [ref=e118] [cursor=pointer]
+        - button "海南省" [ref=e119] [cursor=pointer]
+        - button "重庆市" [ref=e120] [cursor=pointer]
+        - button "四川省" [ref=e121] [cursor=pointer]
+        - button "贵州省" [ref=e122] [cursor=pointer]
+        - button "云南省" [ref=e123] [cursor=pointer]
+        - button "西藏自治区" [ref=e124] [cursor=pointer]
+        - button "陕西省" [ref=e125] [cursor=pointer]
+        - button "甘肃省" [ref=e126] [cursor=pointer]
+        - button "青海省" [ref=e127] [cursor=pointer]
+        - button "宁夏回族自治区" [ref=e128] [cursor=pointer]
+        - button "新疆维吾尔自治区" [ref=e129] [cursor=pointer]
+        - button "香港特别行政区" [ref=e130] [cursor=pointer]
+        - button "澳门特别行政区" [ref=e131] [cursor=pointer]
+        - button "台湾省" [ref=e132] [cursor=pointer]
+    - generic [ref=e134]:
+      - heading "热门景点" [level=2] [ref=e135]
+      - link "查看全部" [ref=e136] [cursor=pointer]:
+        - /url: /map
+        - text: 查看全部
+        - img [ref=e137]
+    - generic [ref=e139]:
+      - heading "快速入口" [level=2] [ref=e141]
+      - generic [ref=e142]:
+        - link "景点地图 查看真实高德地图、景点位置和路线规划。" [ref=e143] [cursor=pointer]:
+          - /url: /map
+          - img [ref=e145]
+          - heading "景点地图" [level=3] [ref=e148]
+          - paragraph [ref=e149]: 查看真实高德地图、景点位置和路线规划。
+        - link "行程规划 根据兴趣和预算生成多日文化遗产路线。" [ref=e150] [cursor=pointer]:
+          - /url: /itinerary
+          - img [ref=e152]
+          - heading "行程规划" [level=3] [ref=e154]
+          - paragraph [ref=e155]: 根据兴趣和预算生成多日文化遗产路线。
+        - link "全景漫游 用沉浸视角查看景点故事、路线和点位详情。" [ref=e156] [cursor=pointer]:
+          - /url: /panorama
+          - img [ref=e158]
+          - heading "全景漫游" [level=3] [ref=e163]
+          - paragraph [ref=e164]: 用沉浸视角查看景点故事、路线和点位详情。
+  - navigation "主导航" [ref=e165]:
+    - generic [ref=e166]:
+      - link "首页" [ref=e167] [cursor=pointer]:
+        - /url: /
+        - img [ref=e168]
+        - generic [ref=e171]: 首页
+      - link "地图" [ref=e172] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e173]
+        - generic [ref=e175]: 地图
+      - link "行程" [ref=e176] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e177]
+        - generic [ref=e179]: 行程
+      - link "全景" [ref=e180] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e181]
+        - generic [ref=e186]: 全景

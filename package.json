@@ -1,0 +1,15 @@
+{
+  "name": "lvyou",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI cultural tourism web challenge demo with AMap, React, Express, and LangChain",
+  "scripts": {
+    "dev": "concurrently -n server,web -c green,blue \"npm run dev --prefix server\" \"npm run dev --prefix web\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:web": "npm run dev --prefix web",
+    "build": "npm run build --prefix server && npm run build --prefix web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

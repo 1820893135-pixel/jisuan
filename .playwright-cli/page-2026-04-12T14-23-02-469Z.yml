@@ -1,0 +1,65 @@
+- generic [ref=e3]:
+  - generic "账号入口":
+    - generic [ref=e4]:
+      - button "登录" [ref=e5] [cursor=pointer]
+      - button "注册" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: 智能行程
+          - heading "我帮你规划" [level=1] [ref=e12]
+          - paragraph [ref=e13]: 说清楚你想怎么逛、想花多少、想看什么，我会给你一条更适合直接出发的路线。
+        - button "开始规划" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - text: 开始规划
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - heading "规划设置" [level=2] [ref=e20]
+        - generic [ref=e21]:
+          - img [ref=e22]
+          - text: 北京市 · 2 天
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: 预算
+          - textbox "预算" [ref=e27]: 2000-3000
+        - generic [ref=e28]:
+          - generic [ref=e29]: 风格
+          - textbox "风格" [ref=e30]: 沉浸文化
+        - generic [ref=e31]:
+          - generic [ref=e32]: 补充说明
+          - textbox "补充说明" [ref=e33]: 希望路线兼顾地图观感、真实动线和城市文化体验。
+      - generic [ref=e34]:
+        - button "历史古迹" [ref=e35] [cursor=pointer]
+        - button "自然风光" [ref=e36] [cursor=pointer]
+        - button "非遗体验" [ref=e37] [cursor=pointer]
+        - button "美食街区" [ref=e38] [cursor=pointer]
+        - button "Citywalk" [ref=e39] [cursor=pointer]
+        - button "夜游打卡" [ref=e40] [cursor=pointer]
+    - generic [ref=e42]:
+      - img [ref=e43]
+      - paragraph [ref=e45]: 还没有生成行程。把偏好填好后点“开始规划”，我会按你的想法整理路线。
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - img [ref=e49]
+        - text: 当前参考城市
+      - strong [ref=e53]: 北京市
+      - paragraph [ref=e54]: 以中轴线、皇家建筑群和当代博物馆带为主，适合从国家叙事切入文化遗产导览。
+  - navigation "主导航" [ref=e55]:
+    - generic [ref=e56]:
+      - link "首页" [ref=e57] [cursor=pointer]:
+        - /url: /
+        - img [ref=e58]
+        - generic [ref=e61]: 首页
+      - link "地图" [ref=e62] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e63]
+        - generic [ref=e65]: 地图
+      - link "行程" [ref=e66] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e67]
+        - generic [ref=e69]: 行程
+      - link "全景" [ref=e70] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e71]
+        - generic [ref=e76]: 全景

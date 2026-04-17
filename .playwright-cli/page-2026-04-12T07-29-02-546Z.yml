@@ -1,0 +1,57 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - generic [ref=e8]: 高德地图工作台
+          - heading "城市文化导览地图" [level=1] [ref=e9]
+          - paragraph [ref=e10]: 用真实高德地图串联城市核心遗产点、周边文化线索与实时步行/驾车路线，同时保留 AI 生成的城市导览主线。
+          - generic [ref=e11]:
+            - generic [ref=e12]: 当前城市 · 等待生成
+            - generic [ref=e13]: 步行视角
+        - generic [ref=e14]:
+          - button "步行优先" [ref=e15] [cursor=pointer]:
+            - img [ref=e16]
+            - text: 步行优先
+          - button "驾车优先" [ref=e19] [cursor=pointer]:
+            - img [ref=e20]
+            - text: 驾车优先
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - heading "城市主线概览" [level=2] [ref=e27]
+          - paragraph [ref=e28]: 上方是实时高德工作台；这里保留 AI 规划的多点导览主线，方便快速浏览整条文化路线。
+        - button "刷新主线" [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+          - text: 刷新主线
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]: 当前城市
+          - strong [ref=e38]: 等待加载
+        - generic [ref=e39]:
+          - generic [ref=e40]: 核心点位
+          - strong [ref=e41]: "0"
+        - generic [ref=e42]:
+          - generic [ref=e43]: 主线里程
+          - strong [ref=e44]: 等待生成
+        - generic [ref=e45]:
+          - generic [ref=e46]: 预计时长
+          - strong [ref=e47]: 等待生成
+  - navigation "主导航" [ref=e48]:
+    - generic [ref=e49]:
+      - link "首页" [ref=e50] [cursor=pointer]:
+        - /url: /
+        - img [ref=e51]
+        - generic [ref=e54]: 首页
+      - link "地图" [ref=e55] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e56]
+        - generic [ref=e58]: 地图
+      - link "行程" [ref=e59] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e60]
+        - generic [ref=e62]: 行程
+      - link "全景" [ref=e63] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e64]
+        - generic [ref=e69]: 全景

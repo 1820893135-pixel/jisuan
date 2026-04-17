@@ -1,0 +1,48 @@
+- generic [ref=e3]:
+  - generic "账号入口":
+    - generic [ref=e4]:
+      - button "登录" [ref=e5] [cursor=pointer]
+      - button "注册" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: 省域导览
+          - heading "省域文化地图" [level=1] [ref=e12]
+        - generic [ref=e13]:
+          - generic "地图语言切换" [ref=e14]:
+            - generic [ref=e15]:
+              - img [ref=e16]
+              - text: 地图语言
+            - button "中文" [ref=e20] [cursor=pointer]
+            - button "EN" [ref=e21] [cursor=pointer]
+          - button "返回全国" [ref=e22] [cursor=pointer]:
+            - img [ref=e23]
+            - text: 返回全国
+          - button "步行优先" [ref=e28] [cursor=pointer]:
+            - img [ref=e29]
+            - text: 步行优先
+          - button "驾车优先" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+            - text: 驾车优先
+    - generic [ref=e38]:
+      - strong [ref=e39]: 正在进入省域地图
+      - generic [ref=e40]: 先同步景点数据和默认底图，再切到对应省份的真实高德地图。
+  - navigation "主导航" [ref=e41]:
+    - generic [ref=e42]:
+      - link "首页" [ref=e43] [cursor=pointer]:
+        - /url: /
+        - img [ref=e44]
+        - generic [ref=e47]: 首页
+      - link "地图" [ref=e48] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e49]
+        - generic [ref=e51]: 地图
+      - link "行程" [ref=e52] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e53]
+        - generic [ref=e55]: 行程
+      - link "全景" [ref=e56] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e57]
+        - generic [ref=e62]: 全景

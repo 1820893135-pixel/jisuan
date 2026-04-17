@@ -1,0 +1,208 @@
+- generic [ref=e3]:
+  - generic "账号入口":
+    - generic [ref=e4]:
+      - button "登录" [ref=e5] [cursor=pointer]
+      - button "注册" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: 省域导览
+          - heading "浙江省" [level=1] [ref=e225]
+        - generic [ref=e13]:
+          - generic "地图语言切换" [ref=e14]:
+            - generic [ref=e15]:
+              - img [ref=e16]
+              - text: 地图语言
+            - button "中文" [ref=e20] [cursor=pointer]
+            - button "EN" [active] [ref=e21] [cursor=pointer]
+          - button "返回全国" [ref=e226] [cursor=pointer]:
+            - img [ref=e227]
+            - text: 返回全国
+          - button "步行优先" [ref=e232] [cursor=pointer]:
+            - img [ref=e233]
+            - text: 步行优先
+          - button "驾车优先" [ref=e236] [cursor=pointer]:
+            - img [ref=e237]
+            - text: 驾车优先
+    - generic [ref=e423]:
+      - generic [ref=e425]:
+        - generic [ref=e426]:
+          - generic [ref=e427]:
+            - img [ref=e428]
+            - text: 浙江省
+          - strong [ref=e433]: 雾
+        - paragraph [ref=e434]: 浙江省 · 北风≤3级 · 湿度 88%
+      - complementary [ref=e435]:
+        - generic [ref=e436]:
+          - generic [ref=e437]:
+            - generic [ref=e438]:
+              - generic [ref=e439]: 城市导览工作台
+              - heading "浙江省文化地图" [level=3] [ref=e440]
+              - paragraph [ref=e441]: 在真实高德地图上检索地标、补充周边线索，并从当前视角直接发起导航。
+            - button "切换为平面视角" [ref=e442] [cursor=pointer]:
+              - img [ref=e443]
+          - generic [ref=e447]:
+            - img [ref=e448]
+            - textbox [ref=e451]:
+              - /placeholder: 搜索景点、博物馆、老街或文化地标
+          - generic [ref=e452]:
+            - button "定位" [ref=e453] [cursor=pointer]:
+              - img [ref=e454]
+              - text: 定位
+            - button "附近" [ref=e457] [cursor=pointer]:
+              - img [ref=e458]
+              - text: 附近
+            - button "主线" [ref=e462] [cursor=pointer]:
+              - img [ref=e463]
+              - text: 主线
+          - generic [ref=e466]:
+            - generic [ref=e467]: 文化线索
+            - button "遗产主线" [ref=e468] [cursor=pointer]
+            - button "博物馆" [ref=e469] [cursor=pointer]
+            - button "非遗体验" [ref=e470] [cursor=pointer]
+            - button "慢游线索" [ref=e471] [cursor=pointer]
+            - button "夜游线索" [ref=e472] [cursor=pointer]
+            - button "街区风味" [ref=e473] [cursor=pointer]
+          - generic [ref=e474]:
+            - generic [ref=e475]: 导览主线
+            - generic [ref=e476]: 高德地图已连接
+        - generic [ref=e477]:
+          - generic [ref=e478]:
+            - generic [ref=e479]:
+              - heading "导览主线" [level=4] [ref=e480]
+              - paragraph [ref=e481]: 沿当前城市导览主线浏览核心点位
+            - generic [ref=e482]: 6 个
+          - generic [ref=e483]:
+            - button "杭州西湖风景名胜区-断桥残雪 导览点位 西湖区 · 西湖 · 龙井路1号杭州西湖风景名胜区内(东北角)，适合作为省域导览里最核心的代表性地标。 建议停留 2-4小时 风景名胜" [ref=e484] [cursor=pointer]:
+              - generic [ref=e485]:
+                - strong [ref=e486]: 杭州西湖风景名胜区-断桥残雪
+                - generic [ref=e487]: 导览点位
+              - paragraph [ref=e488]: 西湖区 · 西湖 · 龙井路1号杭州西湖风景名胜区内(东北角)，适合作为省域导览里最核心的代表性地标。
+              - generic [ref=e489]:
+                - generic [ref=e490]: 建议停留 2-4小时
+                - generic [ref=e491]: 风景名胜
+            - button "杭州西湖风景名胜区-湖滨公园 导览点位 上城区 · 西湖 · 龙井路1号杭州西湖风景名胜区内(东北角)，适合作为省域导览里最核心的代表性地标。 建议停留 2-4小时 风景名胜" [ref=e492] [cursor=pointer]:
+              - generic [ref=e493]:
+                - strong [ref=e494]: 杭州西湖风景名胜区-湖滨公园
+                - generic [ref=e495]: 导览点位
+              - paragraph [ref=e496]: 上城区 · 西湖 · 龙井路1号杭州西湖风景名胜区内(东北角)，适合作为省域导览里最核心的代表性地标。
+              - generic [ref=e497]:
+                - generic [ref=e498]: 建议停留 2-4小时
+                - generic [ref=e499]: 风景名胜
+            - button "武林广场 导览点位 拱墅区 · 天水 · 天水街道天水街道体育场路208号，适合作为省域导览里最核心的代表性地标。 建议停留 2-4小时 风景名胜" [ref=e500] [cursor=pointer]:
+              - generic [ref=e501]:
+                - strong [ref=e502]: 武林广场
+                - generic [ref=e503]: 导览点位
+              - paragraph [ref=e504]: 拱墅区 · 天水 · 天水街道天水街道体育场路208号，适合作为省域导览里最核心的代表性地标。
+              - generic [ref=e505]:
+                - generic [ref=e506]: 建议停留 2-4小时
+                - generic [ref=e507]: 风景名胜
+            - button "浙江省博物馆(孤山馆区) 导览点位 西湖区 · 西湖 · 孤山路25号，适合放在路线前半程，先建立地区文化与历史背景。 建议停留 2-3小时 科教文化服务" [ref=e508] [cursor=pointer]:
+              - generic [ref=e509]:
+                - strong [ref=e510]: 浙江省博物馆(孤山馆区)
+                - generic [ref=e511]: 导览点位
+              - paragraph [ref=e512]: 西湖区 · 西湖 · 孤山路25号，适合放在路线前半程，先建立地区文化与历史背景。
+              - generic [ref=e513]:
+                - generic [ref=e514]: 建议停留 2-3小时
+                - generic [ref=e515]: 科教文化服务
+            - button "西湖文化广场 导览点位 拱墅区 · 朝晖 · 环城北路47号，适合作为省域导览里最核心的代表性地标。 建议停留 2-4小时 风景名胜" [ref=e516] [cursor=pointer]:
+              - generic [ref=e517]:
+                - strong [ref=e518]: 西湖文化广场
+                - generic [ref=e519]: 导览点位
+              - paragraph [ref=e520]: 拱墅区 · 朝晖 · 环城北路47号，适合作为省域导览里最核心的代表性地标。
+              - generic [ref=e521]:
+                - generic [ref=e522]: 建议停留 2-4小时
+                - generic [ref=e523]: 风景名胜
+            - button "浙江自然博物院 导览点位 拱墅区 · 朝晖 · 西湖文化广场6号，适合放在路线前半程，先建立地区文化与历史背景。 建议停留 2-3小时 科教文化服务" [ref=e524] [cursor=pointer]:
+              - generic [ref=e525]:
+                - strong [ref=e526]: 浙江自然博物院
+                - generic [ref=e527]: 导览点位
+              - paragraph [ref=e528]: 拱墅区 · 朝晖 · 西湖文化广场6号，适合放在路线前半程，先建立地区文化与历史背景。
+              - generic [ref=e529]:
+                - generic [ref=e530]: 建议停留 2-3小时
+                - generic [ref=e531]: 科教文化服务
+      - complementary [ref=e532]:
+        - generic [ref=e533]:
+          - img "杭州西湖风景名胜区-断桥残雪 实景" [ref=e535]
+          - generic [ref=e536]:
+            - generic [ref=e537]:
+              - generic [ref=e538]:
+                - generic [ref=e539]: 导览点位
+                - heading "杭州西湖风景名胜区-断桥残雪" [level=3] [ref=e540]
+              - generic [ref=e541]:
+                - img [ref=e542]
+                - generic [ref=e544]: 4.9分
+            - generic [ref=e545]:
+              - generic [ref=e546]: 风景名胜
+              - generic [ref=e547]: 西湖区
+              - generic [ref=e548]: 建议停留 2-4小时
+            - paragraph [ref=e549]: 浙江省杭州市西湖区西湖街道杭州西湖风景名胜区杭州西湖风景名胜区-断桥残雪 · 西湖
+            - paragraph [ref=e550]: 西湖区 · 西湖 · 龙井路1号杭州西湖风景名胜区内(东北角)，适合作为省域导览里最核心的代表性地标。
+            - generic [ref=e551]:
+              - strong [ref=e552]: 导览亮点
+              - paragraph [ref=e553]: 杭州西湖风景名胜区-断桥残雪很适合放在省域主线里当作识别度最高的地标节点。
+            - generic [ref=e554]:
+              - generic [ref=e555]: 风景名胜
+              - generic [ref=e556]: 西湖区
+              - generic [ref=e557]: 西湖
+              - generic [ref=e558]: 旅游景点
+            - generic [ref=e559]:
+              - button "步行" [ref=e560] [cursor=pointer]:
+                - img [ref=e561]
+                - text: 步行
+              - button "驾车" [ref=e564] [cursor=pointer]:
+                - img [ref=e565]
+                - text: 驾车
+              - button "打开高德" [ref=e568] [cursor=pointer]:
+                - img [ref=e569]
+                - text: 打开高德
+            - generic [ref=e573]:
+              - link "沉浸导览" [ref=e574] [cursor=pointer]:
+                - /url: /panorama/poi-B023B01EE6?city=%E6%B5%99%E6%B1%9F%E7%9C%81
+              - button "收藏点位" [ref=e575] [cursor=pointer]
+            - generic [ref=e576]: 从当前位置发起步行或驾车后，这里会显示距离、时长和关键路段提示。
+        - generic [ref=e577]:
+          - generic [ref=e578]:
+            - heading "高德路线详情" [level=4] [ref=e579]
+            - button "清空" [ref=e580] [cursor=pointer]
+          - paragraph [ref=e581]: 右上会同步展示高德原生路线面板，可直接查看分段说明与转向信息。
+    - generic [ref=e399]:
+      - generic [ref=e400]:
+        - generic [ref=e401]:
+          - heading "路线概览" [level=2] [ref=e402]
+          - paragraph [ref=e403]: 这里保留主线里程、时长和路线来源，方便你快速判断这条线路是否顺手。
+        - button "刷新路线" [ref=e404] [cursor=pointer]:
+          - img [ref=e405]
+          - text: 刷新路线
+      - generic [ref=e410]:
+        - generic [ref=e411]:
+          - generic [ref=e412]: 当前地区
+          - strong [ref=e413]: 浙江省
+        - generic [ref=e414]:
+          - generic [ref=e415]: 路线来源
+          - strong [ref=e416]: 高德主线
+        - generic [ref=e417]:
+          - generic [ref=e418]: 主线里程
+          - strong [ref=e419]: 6.9 km
+        - generic [ref=e420]:
+          - generic [ref=e421]: 预计时长
+          - strong [ref=e422]: 1 小时 31 分钟
+  - navigation "主导航" [ref=e36]:
+    - generic [ref=e37]:
+      - link "首页" [ref=e38] [cursor=pointer]:
+        - /url: /
+        - img [ref=e39]
+        - generic [ref=e42]: 首页
+      - link "地图" [ref=e43] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e44]
+        - generic [ref=e46]: 地图
+      - link "行程" [ref=e47] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e48]
+        - generic [ref=e50]: 行程
+      - link "全景" [ref=e51] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e52]
+        - generic [ref=e57]: 全景

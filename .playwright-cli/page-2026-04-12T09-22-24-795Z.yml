@@ -1,0 +1,110 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - generic [ref=e8]: 全国导览入口
+          - heading "中国文化遗产地图" [level=1] [ref=e9]
+          - paragraph [ref=e10]: 先在全国总览里选择省份，再进入对应省域中的真实城市地图、景点导览与路线工作台。
+          - generic [ref=e11]:
+            - generic [ref=e12]: 已开放 3 个省域入口
+            - generic [ref=e13]: 先选省份再进入
+        - button "全国总览" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+          - text: 全国总览
+    - generic [ref=e22]:
+      - complementary [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: 全国导览入口
+              - heading "中国文化遗产地图" [level=3] [ref=e29]
+              - paragraph [ref=e30]: 先从全国尺度选择省份，再进入对应省域中的真实城市导览与景点地图。
+            - button "当前为全国总览" [ref=e31] [cursor=pointer]:
+              - img [ref=e32]
+          - generic [ref=e35]:
+            - generic [ref=e36]: 已开放 3 个省域入口
+            - generic [ref=e37]: 点击地图或列表中的省份进入
+          - generic [ref=e38]:
+            - button "浙江 杭州 一城宋韵半城湖，适合做文化漫游与智能路线规划。 4 个核心点位 文化旅游 · Citywalk" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]:
+                - strong [ref=e41]: 浙江
+                - generic [ref=e42]: 杭州
+              - paragraph [ref=e43]: 一城宋韵半城湖，适合做文化漫游与智能路线规划。
+              - generic [ref=e44]:
+                - generic [ref=e45]: 4 个核心点位
+                - generic [ref=e46]: 文化旅游 · Citywalk
+            - button "陕西 西安 十三朝古都，适合做历史叙事型路线推荐。 4 个核心点位 历史古迹 · 博物馆" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]:
+                - strong [ref=e49]: 陕西
+                - generic [ref=e50]: 西安
+              - paragraph [ref=e51]: 十三朝古都，适合做历史叙事型路线推荐。
+              - generic [ref=e52]:
+                - generic [ref=e53]: 4 个核心点位
+                - generic [ref=e54]: 历史古迹 · 博物馆
+            - button "四川 成都 巴蜀生活感和慢节奏体验，非常适合 AI 个性化路线。 4 个核心点位 慢生活 · 美食" [ref=e55] [cursor=pointer]:
+              - generic [ref=e56]:
+                - strong [ref=e57]: 四川
+                - generic [ref=e58]: 成都
+              - paragraph [ref=e59]: 巴蜀生活感和慢节奏体验，非常适合 AI 个性化路线。
+              - generic [ref=e60]:
+                - generic [ref=e61]: 4 个核心点位
+                - generic [ref=e62]: 慢生活 · 美食
+      - complementary [ref=e63]:
+        - generic [ref=e64]:
+          - img "杭州西湖与远处的古典建筑" [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - generic [ref=e70]: 省域导览
+                - heading "浙江 · 杭州" [level=3] [ref=e71]
+              - generic [ref=e72]:
+                - img [ref=e73]
+                - generic [ref=e77]: 4 个点位
+            - generic [ref=e78]:
+              - generic [ref=e79]: 中国省域入口
+              - generic [ref=e80]: 文化旅游 · Citywalk
+            - paragraph [ref=e81]: 一城宋韵半城湖，适合做文化漫游与智能路线规划。
+            - generic [ref=e82]:
+              - strong [ref=e83]: 进入后会看到什么
+              - paragraph [ref=e84]: 进入后会切到杭州真实地图工作台，继续查看西湖、灵隐寺、河坊街等城市核心点位与周边文化线索。
+            - generic [ref=e85]:
+              - generic [ref=e86]: 文化旅游
+              - generic [ref=e87]: Citywalk
+              - generic [ref=e88]: 非遗体验
+              - generic [ref=e89]: 湖景慢游
+            - button "进入浙江导览" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - text: 进入浙江导览
+    - generic [ref=e94]:
+      - generic [ref=e96]:
+        - heading "省域导览入口" [level=2] [ref=e97]
+        - paragraph [ref=e98]: 当前先开放浙江、陕西、四川三条省域入口；点击地图中的省份后，会进入对应城市的真实高德工作台继续浏览景点。
+      - generic [ref=e99]:
+        - button "浙江 杭州" [ref=e100] [cursor=pointer]:
+          - generic [ref=e101]: 浙江
+          - strong [ref=e102]: 杭州
+        - button "陕西 西安" [ref=e103] [cursor=pointer]:
+          - generic [ref=e104]: 陕西
+          - strong [ref=e105]: 西安
+        - button "四川 成都" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: 四川
+          - strong [ref=e108]: 成都
+  - navigation "主导航" [ref=e109]:
+    - generic [ref=e110]:
+      - link "首页" [ref=e111] [cursor=pointer]:
+        - /url: /
+        - img [ref=e112]
+        - generic [ref=e115]: 首页
+      - link "地图" [ref=e116] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e117]
+        - generic [ref=e119]: 地图
+      - link "行程" [ref=e120] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e121]
+        - generic [ref=e123]: 行程
+      - link "全景" [ref=e124] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e125]
+        - generic [ref=e130]: 全景

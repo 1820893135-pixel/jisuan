@@ -1,0 +1,234 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - generic [ref=e8]: 高德地图工作台
+          - heading "城市文化导览地图" [level=1] [ref=e159]
+          - paragraph [ref=e10]: 用真实高德地图串联城市核心遗产点、周边文化线索与实时步行/驾车路线，同时保留 AI 生成的城市导览主线。
+          - generic [ref=e11]:
+            - generic [ref=e12]: 杭州 · 高德主线
+            - generic [ref=e13]: 步行视角
+        - generic [ref=e14]:
+          - button "返回全国" [ref=e160] [cursor=pointer]:
+            - img [ref=e16]
+            - text: 返回全国
+          - button "步行优先" [ref=e161] [cursor=pointer]:
+            - img [ref=e162]
+            - text: 步行优先
+          - button "驾车优先" [ref=e165] [cursor=pointer]:
+            - img [ref=e166]
+            - text: 驾车优先
+    - generic [ref=e169]:
+      - generic [ref=e170]:
+        - iframe [ref=e171]:
+          
+        - generic [ref=e173]:
+          - generic:
+            - generic "西湖" [ref=e175]:
+              - img [ref=e176]
+              - generic [ref=e178]: "1"
+            - generic "灵隐寺" [ref=e179]:
+              - img [ref=e180]
+              - generic [ref=e182]: "2"
+            - generic "河坊街" [ref=e183]:
+              - img [ref=e184]
+              - generic [ref=e186]: "3"
+            - generic "良渚古城遗址公园" [ref=e187]:
+              - img [ref=e188]
+              - generic [ref=e190]: "4"
+          - generic [ref=e193]:
+            - generic [ref=e194]:
+              - strong [ref=e195]: 西湖
+              - generic [ref=e196]: 导览点位 · 建议停留 2-3小时
+            - generic [ref=e197] [cursor=pointer]: ×
+        - generic:
+          - generic:
+            - generic: 10 公里
+          - generic [ref=e199]:
+            - generic [ref=e200]: +
+            - generic [ref=e201]: "-"
+          - generic [ref=e202]:
+            - list [ref=e203]:
+              - listitem [ref=e204]:
+                - radio [checked] [ref=e205]
+                - paragraph [ref=e206]: 标准图层
+              - listitem [ref=e207]:
+                - radio [ref=e208]
+                - paragraph [ref=e209]: 卫星图
+            - list [ref=e210]:
+              - listitem [ref=e211]:
+                - checkbox [ref=e212]
+                - paragraph [ref=e213]: 路网
+              - listitem [ref=e214]:
+                - checkbox [ref=e215]
+                - paragraph [ref=e216]: 路况
+        - generic:
+          - img
+        - generic [ref=e217]: © 2026 AutoNavi - GS(2025)5996号
+      - complementary [ref=e218]:
+        - generic [ref=e219]:
+          - generic [ref=e220]:
+            - generic [ref=e221]:
+              - generic [ref=e222]: 城市导览工作台
+              - heading "杭州文化地图" [level=3] [ref=e223]
+              - paragraph [ref=e224]: 在真实高德地图上检索地标、补充周边线索，并从当前视角直接发起导航。
+            - button "切换为平面视角" [ref=e225] [cursor=pointer]:
+              - img [ref=e226]
+          - generic [ref=e230]:
+            - img [ref=e231]
+            - textbox [ref=e234]:
+              - /placeholder: 搜索景点、博物馆、老街或文化地标
+          - generic [ref=e235]:
+            - button "定位" [ref=e236] [cursor=pointer]:
+              - img [ref=e237]
+              - text: 定位
+            - button "附近" [ref=e240] [cursor=pointer]:
+              - img [ref=e241]
+              - text: 附近
+            - button "主线" [ref=e245] [cursor=pointer]:
+              - img [ref=e246]
+              - text: 主线
+          - generic [ref=e249]:
+            - generic [ref=e250]: 文化线索
+            - button "博物馆" [ref=e251] [cursor=pointer]
+            - button "茶文化" [ref=e252] [cursor=pointer]
+            - button "古迹遗产" [ref=e253] [cursor=pointer]
+            - button "非遗体验" [ref=e254] [cursor=pointer]
+            - button "夜游线索" [ref=e255] [cursor=pointer]
+          - generic [ref=e256]:
+            - generic [ref=e257]: 导览主线
+            - generic [ref=e258]: 高德地图已连接
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - generic [ref=e261]:
+              - heading "导览主线" [level=4] [ref=e262]
+              - paragraph [ref=e263]: 沿当前城市导览主线浏览核心点位
+            - generic [ref=e264]: 4 个
+          - generic [ref=e265]:
+            - button "西湖 导览点位 适合做环湖路线、打卡点联动和地图可视化展示。 建议停留 2-3小时 自然风光" [ref=e266] [cursor=pointer]:
+              - generic [ref=e267]:
+                - strong [ref=e268]: 西湖
+                - generic [ref=e269]: 导览点位
+              - paragraph [ref=e270]: 适合做环湖路线、打卡点联动和地图可视化展示。
+              - generic [ref=e271]:
+                - generic [ref=e272]: 建议停留 2-3小时
+                - generic [ref=e273]: 自然风光
+            - button "灵隐寺 导览点位 佛教文化地标，适合做文化讲解与 AI 文案生成。 建议停留 2小时 历史人文" [ref=e274] [cursor=pointer]:
+              - generic [ref=e275]:
+                - strong [ref=e276]: 灵隐寺
+                - generic [ref=e277]: 导览点位
+              - paragraph [ref=e278]: 佛教文化地标，适合做文化讲解与 AI 文案生成。
+              - generic [ref=e279]:
+                - generic [ref=e280]: 建议停留 2小时
+                - generic [ref=e281]: 历史人文
+            - button "河坊街 导览点位 可承接美食推荐、非遗体验和夜游路线。 建议停留 1.5小时 街区体验" [ref=e282] [cursor=pointer]:
+              - generic [ref=e283]:
+                - strong [ref=e284]: 河坊街
+                - generic [ref=e285]: 导览点位
+              - paragraph [ref=e286]: 可承接美食推荐、非遗体验和夜游路线。
+              - generic [ref=e287]:
+                - generic [ref=e288]: 建议停留 1.5小时
+                - generic [ref=e289]: 街区体验
+            - button "良渚古城遗址公园 导览点位 适合增加历史纵深和差异化卖点。 建议停留 2-3小时 遗址公园" [ref=e290] [cursor=pointer]:
+              - generic [ref=e291]:
+                - strong [ref=e292]: 良渚古城遗址公园
+                - generic [ref=e293]: 导览点位
+              - paragraph [ref=e294]: 适合增加历史纵深和差异化卖点。
+              - generic [ref=e295]:
+                - generic [ref=e296]: 建议停留 2-3小时
+                - generic [ref=e297]: 遗址公园
+      - complementary [ref=e298]:
+        - generic [ref=e299]:
+          - img "杭州西湖" [ref=e301]
+          - generic [ref=e302]:
+            - generic [ref=e303]:
+              - generic [ref=e304]:
+                - generic [ref=e305]: 导览点位
+                - heading "西湖" [level=3] [ref=e306]
+              - generic [ref=e307]:
+                - img [ref=e308]
+                - generic [ref=e310]: 精选
+            - generic [ref=e311]:
+              - generic [ref=e312]: 自然风光
+              - generic [ref=e313]: 建议停留 2-3小时
+            - paragraph [ref=e314]: 适合做环湖路线、打卡点联动和地图可视化展示。
+            - generic [ref=e315]:
+              - strong [ref=e316]: 导览亮点
+              - paragraph [ref=e317]: 断桥到雷峰塔一线很适合做日游主线。
+            - generic [ref=e318]:
+              - generic [ref=e319]: 湖景
+              - generic [ref=e320]: 摄影
+              - generic [ref=e321]: 经典地标
+            - generic [ref=e322]:
+              - button "步行" [ref=e323] [cursor=pointer]:
+                - img [ref=e324]
+                - text: 步行
+              - button "驾车" [ref=e327] [cursor=pointer]:
+                - img [ref=e328]
+                - text: 驾车
+              - button "打开高德" [ref=e331] [cursor=pointer]:
+                - img [ref=e332]
+                - text: 打开高德
+            - generic [ref=e336]:
+              - link "沉浸导览" [ref=e337] [cursor=pointer]:
+                - /url: /panorama/hz-west-lake
+              - button "收藏点位" [ref=e338] [cursor=pointer]
+            - generic [ref=e339]: 从当前位置发起步行或驾车后，这里会显示距离、时长和关键路段提示。
+        - generic [ref=e340]:
+          - generic [ref=e341]:
+            - heading "高德路线详情" [level=4] [ref=e342]
+            - button "清空" [ref=e343] [cursor=pointer]
+          - paragraph [ref=e344]: 右上会同步展示高德原生路线面板，可直接查看分段说明与转向信息。
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - heading "城市主线概览" [level=2] [ref=e345]
+          - paragraph [ref=e43]: 上方是实时高德工作台；这里保留 AI 规划的多点导览主线，方便快速浏览整条文化路线。
+        - button "刷新主线" [ref=e346] [cursor=pointer]:
+          - img [ref=e347]
+          - text: 刷新主线
+      - generic [ref=e149]:
+        - generic [ref=e352]:
+          - generic [ref=e353]: 当前城市
+          - strong [ref=e354]: 杭州
+        - generic [ref=e355]:
+          - generic [ref=e356]: 核心点位
+          - strong [ref=e357]: "4"
+        - generic [ref=e358]:
+          - generic [ref=e359]: 主线里程
+          - strong [ref=e360]: 34.7 km
+        - generic [ref=e361]:
+          - generic [ref=e362]: 预计时长
+          - strong [ref=e363]: 7 小时 43 分钟
+      - generic [ref=e364]:
+        - generic [ref=e365]:
+          - generic [ref=e366]: "1"
+          - strong [ref=e367]: 西湖
+        - generic [ref=e368]:
+          - generic [ref=e369]: "2"
+          - strong [ref=e370]: 灵隐寺
+        - generic [ref=e371]:
+          - generic [ref=e372]: "3"
+          - strong [ref=e373]: 河坊街
+        - generic [ref=e374]:
+          - generic [ref=e375]: "4"
+          - strong [ref=e376]: 良渚古城遗址公园
+  - navigation "主导航" [ref=e44]:
+    - generic [ref=e45]:
+      - link "首页" [ref=e46] [cursor=pointer]:
+        - /url: /
+        - img [ref=e47]
+        - generic [ref=e50]: 首页
+      - link "地图" [ref=e51] [cursor=pointer]:
+        - /url: /map
+        - img [ref=e52]
+        - generic [ref=e54]: 地图
+      - link "行程" [ref=e55] [cursor=pointer]:
+        - /url: /itinerary
+        - img [ref=e56]
+        - generic [ref=e58]: 行程
+      - link "全景" [ref=e59] [cursor=pointer]:
+        - /url: /panorama
+        - img [ref=e60]
+        - generic [ref=e65]: 全景
