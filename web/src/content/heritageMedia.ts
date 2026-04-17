@@ -15,34 +15,29 @@ const homeHeroSlides: HomeHeroSlide[] = [
     id: 'west-lake',
     title: '西湖暮色',
     kicker: '江南水岸',
-    summary:
-      '从湖山、园林到古街灯火，把中国文化遗产的城市气质先铺开，再一站一站慢慢进入。',
+    summary: '从湖山园林到古街灯火，铺开一城诗意',
     caption: '杭州西湖的湖面层次和远山线条，很适合作为导览首页的开场画面。',
     alt: '杭州西湖傍晚湖景',
     src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/West%20Lake%2062995-Hangzhou%20%2849152804977%29.jpg?width=2200',
     sourceLabel: 'Wikimedia Commons',
-    sourceUrl:
-      'https://commons.wikimedia.org/wiki/File:West_Lake_62995-Hangzhou_(49152804977).jpg',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:West_Lake_62995-Hangzhou_(49152804977).jpg',
   },
   {
     id: 'potala',
     title: '布达拉宫',
     kicker: '高原遗产',
-    summary:
-      '高原遗产、宗教建筑和城市天际线交织在一起，适合承接全国视角下更开阔的文化导览。',
+    summary: '在世界屋脊之上，遇见信仰与山河',
     caption: '把高原空间感拉进首页，能让整站不只停留在单一城市的印象里。',
     alt: '西藏布达拉宫',
     src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Potala%20Palace,%20Tibet%20%2838938132080%29.jpg?width=2200',
     sourceLabel: 'Wikimedia Commons',
-    sourceUrl:
-      'https://commons.wikimedia.org/wiki/File:Potala_Palace,_Tibet_(38938132080).jpg',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Potala_Palace,_Tibet_(38938132080).jpg',
   },
   {
     id: 'great-wall',
     title: '慕田峪长城',
     kicker: '山脊古迹',
-    summary:
-      '长城适合做文化遗产入口页的第二层气质，让用户一眼就知道这不是普通旅游站，而是导览站。',
+    summary: '沿山脊古道而行，触摸千年文明的脉络',
     caption: '用横向山脊和城墙线条做轮播图，滑动时视觉节奏会更强。',
     alt: '慕田峪长城全景',
     src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Pano%20mutianyu%20great%20wall.jpg?width=2200',
@@ -53,8 +48,7 @@ const homeHeroSlides: HomeHeroSlide[] = [
     id: 'temple-of-heaven',
     title: '天坛',
     kicker: '礼制建筑',
-    summary:
-      '礼制建筑、城市轴线和花园前景组合起来，会让首页既有文化感，也不会过分沉重。',
+    summary: '在礼制与轴线的秩序中，读懂古都气度',
     caption: '适合放在轮播尾帧，收住前面几张更强烈的风景和高原画面。',
     alt: '北京天坛',
     src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Temple%20of%20Heaven%20%2854391733019%29.jpg?width=2200',
