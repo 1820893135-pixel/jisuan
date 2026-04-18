@@ -7,8 +7,15 @@ import {
 import type { ReactNode } from 'react'
 import { travelApi } from '../api'
 import { readAuthToken, writeAuthToken } from '../lib/authStorage'
+import { getAuthSubmitValidationMessage } from '../lib/authValidation'
 import { readLastCity, writeLastCity } from '../lib/appPreferences'
-import { readItineraryHistory, writeItineraryHistory } from '../lib/itineraryHistory'
+import { clearPlannerChatMessages } from '../lib/plannerChatMemory'
+import {
+  clearItineraryHistory,
+  readItineraryHistory,
+  upsertItineraryHistoryEntry,
+  writeItineraryHistory,
+} from '../lib/itineraryHistory'
 import type {
   CaptchaChallenge,
   CityGuide,
@@ -21,6 +28,7 @@ import type {
   PlannerForm,
   RouteMode,
   RoutePlan,
+  UpdatePasswordPayload,
   User,
 } from '../types'
 import { TravelAppContext, type TravelAppStore } from './travelAppStore'
@@ -41,6 +49,7 @@ const initialForm: PlannerForm = {
 const emptyAuthForm = {
   username: '',
   password: '',
+  confirmPassword: '',
   captchaCode: '',
   captchaId: '',
 }
@@ -111,6 +120,18 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     writeItineraryHistory(itineraryHistory)
   }, [itineraryHistory])
+
+  useEffect(() => {
+    if (token || user) {
+      return
+    }
+
+    clearItineraryHistory()
+    clearPlannerChatMessages()
+    setItineraryHistory([])
+    setItinerary(null)
+    setPlanSource('fallback-template')
+  }, [token, user])
 
   useEffect(() => {
     if (!guide) {
@@ -247,13 +268,16 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
   }
 
   function pushItineraryHistoryEntry(entry: ItineraryHistoryEntry) {
-    setItineraryHistory((current) => [
-      entry,
-      ...current.filter((item) => item.id !== entry.id).slice(0, 7),
-    ])
+    setItineraryHistory((current) => upsertItineraryHistoryEntry(current, entry))
   }
 
   function restoreItineraryHistory(historyId: string) {
+    if (!token || !user) {
+      openAuthDialog('login')
+      setError('请先登录或注册，再查看历史行程。')
+      return
+    }
+
     const historyEntry = itineraryHistory.find((entry) => entry.id === historyId)
     if (!historyEntry) {
       return
@@ -272,6 +296,12 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
   }
 
   async function handleGeneratePlan(overrides?: Partial<PlannerForm>): Promise<PlannerGenerationResult | null> {
+    if (!token || !user) {
+      openAuthDialog('login')
+      setError('请先登录或注册，再使用行程规划。')
+      return null
+    }
+
     setPlanning(true)
     setError('')
 
@@ -335,13 +365,10 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
   }
 
   async function handleAuthSubmit() {
-    if (!authForm.username.trim() || !authForm.password.trim()) {
-      setError('请输入用户名和密码后再继续。')
-      return
-    }
+    const validationMessage = getAuthSubmitValidationMessage(authMode, authForm)
 
-    if (!authForm.captchaCode.trim() || !authForm.captchaId) {
-      setError('请输入验证码后再继续。')
+    if (validationMessage) {
+      setError(validationMessage)
       return
     }
 
@@ -423,6 +450,35 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function handleProfileUsernameUpdate(username: string) {
+    if (!token || !user) {
+      openAuthDialog('login')
+      throw new Error('请先登录后再修改用户名。')
+    }
+
+    const response = await travelApi.updateUsername(
+      {
+        username: username.trim(),
+      },
+      token,
+    )
+
+    setToken(response.token)
+    setUser(response.user)
+    writeAuthToken(response.token)
+
+    return response.user
+  }
+
+  async function handleProfilePasswordUpdate(payload: UpdatePasswordPayload) {
+    if (!token || !user) {
+      openAuthDialog('login')
+      throw new Error('请先登录后再修改密码。')
+    }
+
+    await travelApi.updatePassword(payload, token)
+  }
+
   function handleLogout() {
     clearAuthState()
     closeAuthDialog()
@@ -449,7 +505,10 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  function setAuthField(field: 'username' | 'password' | 'captchaCode', value: string) {
+  function setAuthField(
+    field: 'username' | 'password' | 'confirmPassword' | 'captchaCode',
+    value: string,
+  ) {
     setAuthForm((current) => ({
       ...current,
       [field]: value,
@@ -479,6 +538,8 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     handleGeneratePlan,
     handleLogout,
     handlePlanRoute,
+    handleProfilePasswordUpdate,
+    handleProfileUsernameUpdate,
     handleRemoveFavorite,
     handleToggleFavorite,
     health,

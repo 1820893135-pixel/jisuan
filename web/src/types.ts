@@ -105,8 +105,24 @@ export interface CaptchaChallenge {
 export interface AuthPayload {
   username: string
   password: string
+  confirmPassword?: string
   captchaId: string
   captchaCode: string
+}
+
+export interface UpdateUsernamePayload {
+  username: string
+}
+
+export interface UpdatePasswordPayload {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
+export interface UsernameAvailability {
+  available: boolean
+  suggestions: string[]
 }
 
 export interface Favorite {

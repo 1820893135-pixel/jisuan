@@ -1,6 +1,22 @@
-import { CalendarDays, Heart, LogIn, MapPinned, RefreshCw, Sparkles } from 'lucide-react'
+import { CalendarDays, Heart, LogIn, MapPinned, RefreshCw, ShieldCheck, Sparkles, UserRound } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTravelApp } from '../context/useTravelApp'
+import {
+  getPasswordChangeValidationMessage,
+  getProfileUsernameValidationMessage,
+} from '../lib/authValidation'
+
+type ProfileFeedback = {
+  text: string
+  tone: 'error' | 'success'
+} | null
+
+const emptyPasswordForm = {
+  confirmPassword: '',
+  currentPassword: '',
+  newPassword: '',
+}
 
 function formatHistoryTime(value: string) {
   const date = new Date(value)
@@ -18,12 +34,91 @@ export function ProfilePage() {
   const {
     favoriteBusyPoiId,
     favorites,
+    handleProfilePasswordUpdate,
+    handleProfileUsernameUpdate,
     handleRemoveFavorite,
     itineraryHistory,
     openAuthDialog,
     restoreItineraryHistory,
     user,
   } = useTravelApp()
+  const [usernameForm, setUsernameForm] = useState('')
+  const [usernameBusy, setUsernameBusy] = useState(false)
+  const [usernameFeedback, setUsernameFeedback] = useState<ProfileFeedback>(null)
+  const [passwordForm, setPasswordForm] = useState(emptyPasswordForm)
+  const [passwordBusy, setPasswordBusy] = useState(false)
+  const [passwordFeedback, setPasswordFeedback] = useState<ProfileFeedback>(null)
+
+  useEffect(() => {
+    setUsernameForm(user?.username ?? '')
+    setUsernameFeedback(null)
+    setPasswordForm(emptyPasswordForm)
+    setPasswordFeedback(null)
+  }, [user?.id, user?.username])
+
+  async function handleUsernameSubmit() {
+    if (!user) {
+      return
+    }
+
+    const validationMessage = getProfileUsernameValidationMessage(user.username, usernameForm)
+    if (validationMessage) {
+      setUsernameFeedback({
+        text: validationMessage,
+        tone: 'error',
+      })
+      return
+    }
+
+    setUsernameBusy(true)
+    setUsernameFeedback(null)
+
+    try {
+      const updatedUser = await handleProfileUsernameUpdate(usernameForm)
+      setUsernameForm(updatedUser.username)
+      setUsernameFeedback({
+        text: '用户名已更新，页面展示会立即同步。',
+        tone: 'success',
+      })
+    } catch (caughtError) {
+      setUsernameFeedback({
+        text: getActionMessage(caughtError),
+        tone: 'error',
+      })
+    } finally {
+      setUsernameBusy(false)
+    }
+  }
+
+  async function handlePasswordSubmit() {
+    const validationMessage = getPasswordChangeValidationMessage(passwordForm)
+    if (validationMessage) {
+      setPasswordFeedback({
+        text: validationMessage,
+        tone: 'error',
+      })
+      return
+    }
+
+    setPasswordBusy(true)
+    setPasswordFeedback(null)
+
+    try {
+      await handleProfilePasswordUpdate(passwordForm)
+      setPasswordForm(emptyPasswordForm)
+      setPasswordFeedback({
+        text: '密码已更新，下次登录请使用新密码。',
+        tone: 'success',
+      })
+    } catch (caughtError) {
+      setPasswordFeedback({
+        text: getActionMessage(caughtError),
+        tone: 'error',
+      })
+    } finally {
+      setPasswordBusy(false)
+    }
+  }
 
   return (
     <div className="screen-page profile-page">
@@ -32,35 +127,14 @@ export function ProfilePage() {
           <div>
             <span className="profile-kicker">个人中心</span>
             <h1>{user ? `${user.username} 的导览记录` : '个人中心'}</h1>
-            <p className="profile-summary">
-              在这里查看收藏点位、历史行程和账号状态，后面继续补“记忆式导览”时也会以这里为入口。
-            </p>
           </div>
         </div>
 
-        {user ? (
-          <div className="profile-overview">
-            <article className="profile-stat-card">
-              <small>账号状态</small>
-              <strong>已登录</strong>
-              <span>欢迎回来，继续你的文化遗产导览。</span>
-            </article>
-            <article className="profile-stat-card">
-              <small>收藏点位</small>
-              <strong>{favorites.length}</strong>
-              <span>已保存的景点会优先作为后续路线偏好。</span>
-            </article>
-            <article className="profile-stat-card">
-              <small>历史行程</small>
-              <strong>{itineraryHistory.length}</strong>
-              <span>支持继续恢复之前的 AI 行程规划结果。</span>
-            </article>
-          </div>
-        ) : (
+        {!user ? (
           <div className="profile-empty">
             <LogIn className="icon-6" />
             <strong>登录后即可使用个人中心</strong>
-            <span>收藏、历史行程和后续的导览记忆都会保存在账号里。</span>
+            <span>收藏景点、历史行程和后续规划都会保存在账号里。</span>
             <div className="profile-empty__actions">
               <button className="button-primary" onClick={() => openAuthDialog('login')} type="button">
                 登录
@@ -70,8 +144,147 @@ export function ProfilePage() {
               </button>
             </div>
           </div>
-        )}
+        ) : null}
       </section>
+
+      {user ? (
+        <section className="content-section profile-section">
+          <div className="section-header">
+            <div>
+              <h2>账号设置</h2>
+              <p className="profile-settings-intro">
+                在这里更新展示名称与登录密码，导览记录、收藏景点和行程数据都会保留在当前账号下。
+              </p>
+            </div>
+          </div>
+
+          <div className="profile-settings-grid">
+            <form
+              className="profile-settings-card"
+              onSubmit={(event) => {
+                event.preventDefault()
+                void handleUsernameSubmit()
+              }}
+            >
+              <div className="profile-settings-card__header">
+                <span className="profile-settings-card__eyebrow">资料信息</span>
+                <h3>修改用户名</h3>
+                <p>用于顶部导航和个人中心展示，可保留你的导览身份感。</p>
+              </div>
+
+              <div className="profile-settings-summary">
+                <span>当前用户名</span>
+                <strong>{user.username}</strong>
+              </div>
+
+              <label className="auth-field profile-settings-field">
+                <span>新用户名</span>
+                <input
+                  autoComplete="username"
+                  onChange={(event) => setUsernameForm(event.target.value)}
+                  placeholder="请输入新的用户名"
+                  type="text"
+                  value={usernameForm}
+                />
+                <small className="auth-field__hint">支持中文、英文、数字、下划线和连字符。</small>
+              </label>
+
+              {usernameFeedback ? (
+                <div
+                  className={usernameFeedback.tone === 'error' ? 'notice notice--error' : 'notice notice--soft'}
+                >
+                  {usernameFeedback.text}
+                </div>
+              ) : null}
+
+              <div className="profile-settings-card__actions">
+                <button className="button-primary" disabled={usernameBusy} type="submit">
+                  <UserRound className="icon-4" />
+                  {usernameBusy ? '保存中…' : '保存用户名'}
+                </button>
+              </div>
+            </form>
+
+            <form
+              className="profile-settings-card"
+              onSubmit={(event) => {
+                event.preventDefault()
+                void handlePasswordSubmit()
+              }}
+            >
+              <div className="profile-settings-card__header">
+                <span className="profile-settings-card__eyebrow">安全设置</span>
+                <h3>修改密码</h3>
+                <p>更新后当前登录状态会保留，但下次登录需要使用新密码。</p>
+              </div>
+
+              <label className="auth-field profile-settings-field">
+                <span>当前密码</span>
+                <input
+                  autoComplete="current-password"
+                  onChange={(event) =>
+                    setPasswordForm((current) => ({
+                      ...current,
+                      currentPassword: event.target.value,
+                    }))
+                  }
+                  placeholder="请输入当前密码"
+                  type="password"
+                  value={passwordForm.currentPassword}
+                />
+              </label>
+
+              <label className="auth-field profile-settings-field">
+                <span>新密码</span>
+                <input
+                  autoComplete="new-password"
+                  onChange={(event) =>
+                    setPasswordForm((current) => ({
+                      ...current,
+                      newPassword: event.target.value,
+                    }))
+                  }
+                  placeholder="请输入新的高强度密码"
+                  type="password"
+                  value={passwordForm.newPassword}
+                />
+                <small className="auth-field__hint">新密码需为 12-72 位，并包含大小写字母、数字和特殊字符。</small>
+              </label>
+
+              <label className="auth-field profile-settings-field">
+                <span>确认新密码</span>
+                <input
+                  autoComplete="new-password"
+                  onChange={(event) =>
+                    setPasswordForm((current) => ({
+                      ...current,
+                      confirmPassword: event.target.value,
+                    }))
+                  }
+                  placeholder="请再次输入新密码"
+                  type="password"
+                  value={passwordForm.confirmPassword}
+                />
+              </label>
+
+              {passwordFeedback ? (
+                <div
+                  className={passwordFeedback.tone === 'error' ? 'notice notice--error' : 'notice notice--soft'}
+                >
+                  {passwordFeedback.text}
+                </div>
+              ) : null}
+
+              <div className="profile-settings-card__actions">
+                <button className="button-primary" disabled={passwordBusy} type="submit">
+                  <ShieldCheck className="icon-4" />
+                  {passwordBusy ? '更新中…' : '修改密码'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      ) : null}
 
       <section className="content-section profile-section">
         <div className="section-header">
@@ -162,10 +375,18 @@ export function ProfilePage() {
           </div>
         ) : (
           <div className="profile-placeholder">
-            <span>还没有历史行程，去行程页让“我帮你规划”先生成一份路线。</span>
+            <span>还没有历史行程，可以先去行程页生成一份路线。</span>
           </div>
         )}
       </section>
     </div>
   )
+}
+
+function getActionMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return '请求失败，请稍后再试。'
 }

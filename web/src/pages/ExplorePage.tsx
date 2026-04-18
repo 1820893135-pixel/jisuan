@@ -1,4 +1,4 @@
-import { CarFront, Footprints, Globe2 } from 'lucide-react'
+import { CarFront, CloudSun, Footprints, Globe2, Layers3 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { MapWorkspace } from '../components/MapWorkspace'
@@ -56,6 +56,8 @@ export function ExplorePage() {
     () => requestedScope === 'national' || !readLastCity(),
   )
   const [enteringProvince, setEnteringProvince] = useState<string | null>(null)
+  const [immersive3D, setImmersive3D] = useState(() => requestedView === 'immersive')
+  const [weatherLine, setWeatherLine] = useState('')
 
   const provinceEntries = useMemo(() => buildProvinceEntries(cities), [cities])
 
@@ -83,6 +85,16 @@ export function ExplorePage() {
     void selectCity(requestedCity)
   }, [guide?.city, loadingGuide, requestedCity, selectCity])
 
+  useEffect(() => {
+    setImmersive3D(requestedView === 'immersive')
+  }, [requestedView])
+
+  useEffect(() => {
+    if (showNationalOverview) {
+      setWeatherLine('')
+    }
+  }, [showNationalOverview])
+
   async function handleEnterProvince(province: string) {
     setEnteringProvince(province)
 
@@ -100,6 +112,8 @@ export function ExplorePage() {
     navigate('/map?scope=national')
   }
 
+  const weatherSummary = weatherLine || `${guide?.city ?? '当前城市'} · 天气加载中`
+
   return (
     <div className="screen-page map-page">
       <header className="page-header page-header--map page-header--map-minimal">
@@ -109,7 +123,11 @@ export function ExplorePage() {
             <h1>{showNationalOverview ? '中国文化遗产地图' : guide?.city ?? '省域文化地图'}</h1>
           </div>
 
-          <div className="map-mode-switch">
+          <div
+            className={
+              showNationalOverview ? 'map-mode-switch' : 'map-mode-switch map-mode-switch--workspace'
+            }
+          >
             {showNationalOverview ? (
               <button className="chip-button active" type="button">
                 <Globe2 className="icon-4" />
@@ -137,6 +155,27 @@ export function ExplorePage() {
                   <CarFront className="icon-4" />
                   驾车优先
                 </button>
+                <div className="map-view-switch-inline">
+                  <button
+                    className={immersive3D ? 'chip-button' : 'chip-button active'}
+                    onClick={() => setImmersive3D(false)}
+                    type="button"
+                  >
+                    标准地图
+                  </button>
+                  <button
+                    className={immersive3D ? 'chip-button active' : 'chip-button'}
+                    onClick={() => setImmersive3D(true)}
+                    type="button"
+                  >
+                    <Layers3 className="icon-4" />
+                    沉浸 3D
+                  </button>
+                </div>
+                <div className="map-weather-inline" title={weatherSummary}>
+                  <CloudSun className="icon-4" />
+                  <span>{weatherSummary}</span>
+                </div>
               </>
             )}
           </div>
@@ -160,12 +199,13 @@ export function ExplorePage() {
             city={guide.city}
             favoriteBusyPoiId={favoriteBusyPoiId}
             favoritePoiIds={favoritePoiIds}
+            immersive3D={immersive3D}
             initialPoiId={requestedPoiId || null}
-            initialView={requestedView}
             key={`${guide.city}-workspace`}
             mapLanguage="zh_cn"
             onRouteModeChange={setRouteMode}
             onToggleFavorite={handleToggleFavorite}
+            onWeatherLineChange={setWeatherLine}
             pois={guide.pois}
             routeMode={routeMode}
             routePlan={routePlan}

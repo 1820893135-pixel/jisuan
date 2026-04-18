@@ -10,6 +10,9 @@ import type {
   PlannerForm,
   RouteMode,
   RoutePlan,
+  UpdatePasswordPayload,
+  UpdateUsernamePayload,
+  UsernameAvailability,
   User,
 } from './types'
 
@@ -79,6 +82,11 @@ export const travelApi = {
   getCaptcha() {
     return request<CaptchaChallenge>('/auth/captcha')
   },
+  checkUsernameAvailability(username: string) {
+    return request<UsernameAvailability>(
+      `/auth/username-availability?username=${encodeURIComponent(username)}`,
+    )
+  },
   register(payload: AuthPayload) {
     return request<{ user: User; token: string }>('/auth/register', {
       method: 'POST',
@@ -93,6 +101,20 @@ export const travelApi = {
   },
   getMe(token: string) {
     return request<{ user: User }>('/auth/me', { token })
+  },
+  updateUsername(payload: UpdateUsernamePayload, token: string) {
+    return request<{ user: User; token: string }>('/auth/profile', {
+      method: 'PATCH',
+      token,
+      body: JSON.stringify(payload),
+    })
+  },
+  updatePassword(payload: UpdatePasswordPayload, token: string) {
+    return request<{ success: boolean }>('/auth/password', {
+      method: 'PATCH',
+      token,
+      body: JSON.stringify(payload),
+    })
   },
   getFavorites(token: string) {
     return request<{ favorites: Favorite[] }>('/favorites', { token })

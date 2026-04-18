@@ -1,9 +1,7 @@
-import {
+﻿import {
   CarFront,
-  CloudSun,
   ExternalLink,
   Footprints,
-  Layers3,
   LocateFixed,
   MapPinned,
   Search,
@@ -106,11 +104,12 @@ interface MapWorkspaceProps {
   center: [number, number];
   favoriteBusyPoiId: string | null;
   favoritePoiIds: Set<string>;
+  immersive3D: boolean;
   initialPoiId?: string | null;
-  initialView?: "standard" | "immersive";
   mapLanguage: "zh_cn" | "en";
   onRouteModeChange: (mode: RouteMode) => void;
   onToggleFavorite: (poiId: string) => Promise<void>;
+  onWeatherLineChange?: (line: string) => void;
   pois: Poi[];
   routeMode: RouteMode;
   routePlan: RoutePlan | null;
@@ -248,7 +247,7 @@ function getPlaceSourceLabel(source: PlaceSource) {
     case "guide":
       return "导览点位";
     case "mcp-discovery":
-      return "城市精选";
+      return "主题点位";
     case "amap-nearby":
       return "附近推荐";
     default:
@@ -266,25 +265,6 @@ function getMarkerLabel(place: DiscoveryPlace, index: number) {
   }
 
   return place.source === "amap-nearby" ? "近" : "搜";
-}
-
-function getScopeTitle(
-  scope: SearchScope,
-  activeTheme: DiscoveryTheme | undefined,
-) {
-  if (scope === "guide") {
-    return "导览主线";
-  }
-
-  if (scope === "theme") {
-    return activeTheme ? `${activeTheme.label}精选` : "城市精选";
-  }
-
-  if (scope === "nearby") {
-    return activeTheme ? `附近推荐 · ${activeTheme.label}` : "附近推荐";
-  }
-
-  return "高德检索结果";
 }
 
 function getPlaceSecondaryLabel(place: DiscoveryPlace) {
@@ -729,11 +709,12 @@ export function MapWorkspace({
   center,
   favoriteBusyPoiId,
   favoritePoiIds,
+  immersive3D,
   initialPoiId,
-  initialView = "standard",
   mapLanguage,
   onRouteModeChange,
   onToggleFavorite,
+  onWeatherLineChange,
   pois,
   routeMode,
   routePlan,
@@ -741,18 +722,17 @@ export function MapWorkspace({
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<SearchScope>("guide");
   const [discovery, setDiscovery] = useState<CityMapDiscovery | null>(null);
-  const [discoveryError, setDiscoveryError] = useState("");
+  const [, setDiscoveryError] = useState("");
   const [searchResults, setSearchResults] = useState<DiscoveryPlace[]>([]);
   const [searchSuggestions, setSearchSuggestions] = useState<
     SearchSuggestion[]
   >([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [searchMessage, setSearchMessage] = useState("高德地图已连接");
+  const [, setSearchLoading] = useState(false);
+  const [, setSearchMessage] = useState("");
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
-  const [immersive3D, setImmersive3D] = useState(initialView === "immersive");
   const [mapReady, setMapReady] = useState(false);
   const [isInspectorVisible, setIsInspectorVisible] = useState(false);
   const [liveRouteSummary, setLiveRouteSummary] =
@@ -762,7 +742,7 @@ export function MapWorkspace({
   const [cityWeather, setCityWeather] = useState<LiveWeatherSnapshot | null>(
     null,
   );
-  const [cityForecast, setCityForecast] = useState<WeatherForecastCast[]>([]);
+  const [, setCityForecast] = useState<WeatherForecastCast[]>([]);
   const [nearbyOriginLabel, setNearbyOriginLabel] = useState("城市中心");
   const [activeNearbyThemeId, setActiveNearbyThemeId] = useState<NearbyThemeId>(
     () => defaultDiscoveryThemes[0]?.id ?? "museum",
@@ -903,45 +883,28 @@ export function MapWorkspace({
       ? `${resolvedSelectedPlace.address} · ${resolvedSelectedPlace.businessArea}`
       : resolvedSelectedPlace.address
     : "正在通过高德逆地理编码补全详细地址";
-  const weatherHeadline = cityWeather
-    ? cityWeather.temperature
-      ? `${cityWeather.weather || "天气"} ${cityWeather.temperature}°C`
-      : cityWeather.weather || `${city}天气`
-    : `${city}天气加载中`;
-  const weatherDescription = cityWeather
+  const weatherLine = cityWeather
     ? [
         cityWeather.city || city,
+        cityWeather.weather || "天气",
+        cityWeather.temperature ? `${cityWeather.temperature}°C` : "",
         cityWeather.windDirection
           ? `${cityWeather.windDirection}风${cityWeather.windPower || ""}级`
           : "",
-        cityWeather.humidity ? `湿度 ${cityWeather.humidity}%` : "",
+        cityWeather.humidity ? `湿度${cityWeather.humidity}%` : "",
       ]
         .filter(Boolean)
         .join(" · ")
-    : "来自高德 Weather 实况能力";
-  const weatherForecastItems = cityForecast.map((cast) => ({
-    ...cast,
-    label: cast.date ? cast.date.slice(5).replace("-", "/") : "",
-  }));
-  const resultTitle = getScopeTitle(scope, activeNearbyTheme);
-  const resultContextLabel =
-    scope === "guide"
-      ? "沿当前城市导览主线浏览核心点位"
-      : scope === "theme"
-        ? discovery?.headline ?? "来自高德 MCP 的城市精选点位"
-      : scope === "nearby"
-        ? `以${nearbyOriginLabel}为中心补充周边线索`
-        : "根据关键词返回高德实时 POI 结果";
+    : `${city}天气加载中`;
+  useEffect(() => {
+    onWeatherLineChange?.(weatherLine);
+  }, [onWeatherLineChange, weatherLine]);
 
   useEffect(() => {
     if (!nearbyThemes.some((theme) => theme.id === activeNearbyThemeId)) {
       setActiveNearbyThemeId(nearbyThemes[0]?.id ?? "museum");
     }
   }, [activeNearbyThemeId, nearbyThemes]);
-
-  useEffect(() => {
-    setImmersive3D(initialView === "immersive");
-  }, [initialView]);
 
   useEffect(() => {
     if (!initialPoiId) {
@@ -984,7 +947,7 @@ export function MapWorkspace({
 
         setDiscovery(null);
         setDiscoveryError(
-          error instanceof Error ? error.message : "城市精选加载失败",
+          error instanceof Error ? error.message : "主题点位加载失败",
         );
       });
 
@@ -1408,7 +1371,7 @@ export function MapWorkspace({
 
     if (selectedPlace && state.infoWindow) {
       runMapCommand(() => state.infoWindow?.setContent(
-        `<div class="amap-bubble"><strong>${selectedPlace.name}</strong><span>${getPlaceSourceLabel(selectedPlace.source)} · ${getPlaceSecondaryLabel(selectedPlace)}</span></div>`,
+        `<div class="amap-bubble"><strong>${selectedPlace.name}</strong></div>`,
       ));
       runMapCommand(() => state.infoWindow?.open(map, selectedPlace.location));
     }
@@ -1672,23 +1635,6 @@ export function MapWorkspace({
               <span>先把高德默认底图和文字标注稳定铺开，再接入景点、路线与天气。</span>
             </div>
           ) : null}
-          <div className="map-view-switcher">
-            <button
-              className={immersive3D ? "chip-button" : "chip-button active"}
-              onClick={() => setImmersive3D(false)}
-              type="button"
-            >
-              标准地图
-            </button>
-            <button
-              className={immersive3D ? "chip-button active" : "chip-button"}
-              onClick={() => setImmersive3D(true)}
-              type="button"
-            >
-              <Layers3 className="icon-4" />
-              沉浸 3D
-            </button>
-          </div>
           {resultPlaces.length > 1 ? (
             <div className="map-place-switcher">
               <div className="map-place-switcher__head">
@@ -1716,50 +1662,13 @@ export function MapWorkspace({
               </div>
             </div>
           ) : null}
-          <div className="map-weather-card">
-            <div className="map-weather-card__header">
-              <span className="map-weather-card__title">
-                <CloudSun className="icon-4" />
-                {city}
-              </span>
-              <strong>{weatherHeadline}</strong>
-            </div>
-            <p className="map-weather-card__summary">{weatherDescription}</p>
-            {weatherForecastItems.length > 0 ? (
-              <div className="map-weather-card__forecast">
-                {weatherForecastItems.map((cast) => (
-                  <div key={cast.date || cast.label} className="map-weather-card__cast">
-                    <span>{cast.label || "今日"}</span>
-                    <strong>{cast.dayWeather || "天气"}</strong>
-                    <small>
-                      {cast.dayTemp || "--"}° / {cast.nightTemp || "--"}°
-                    </small>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
           <aside className="map-shell__dock">
             <section className="map-glass-card map-toolbar-card">
               <div className="map-toolbar-card__header">
                 <div>
                   <span className="map-kicker">城市导览工作台</span>
                   <h3>{city}文化地图</h3>
-                  <p className="map-toolbar-card__caption">
-                    在真实高德地图上检索地标、补充周边线索，并从当前视角直接发起导航。
-                  </p>
                 </div>
-                <button
-                  className={
-                    immersive3D ? "round-button active" : "round-button"
-                  }
-                  onClick={() => setImmersive3D((value) => !value)}
-                  title={immersive3D ? "切换为平面视角" : "切换为 3D 视角"}
-                  type="button"
-                >
-                  <Layers3 className="icon-5" />
-                </button>
               </div>
               <label className="map-toolbar-card__search">
                 <Search className="icon-5 search-icon" />
@@ -1851,49 +1760,8 @@ export function MapWorkspace({
                   </button>
                 ))}
               </div>
-              <div className="map-status-row">
-                <span className="map-status-pill map-status-pill--accent">
-                  {scope === "guide"
-                    ? "导览主线"
-                    : scope === "theme"
-                      ? "城市精选"
-                    : scope === "nearby"
-                      ? "附近推荐"
-                      : "高德检索"}
-                </span>
-                <span className="map-status-pill">
-                  {searchLoading ? "检索中..." : searchMessage}
-                </span>
-                {scope === "theme" && discovery?.headline ? (
-                  <span className="map-status-pill">{discovery.headline}</span>
-                ) : null}
-                {scope === "nearby" ? (
-                  <span className="map-status-pill">{nearbyOriginLabel}</span>
-                ) : null}
-                {discoveryError ? (
-                  <span className="map-status-pill">{discoveryError}</span>
-                ) : null}
-                {userLocation ? (
-                  <span className="map-status-pill">定位已就绪</span>
-                ) : null}
-                {liveRouteSummary ? (
-                  <span className="map-status-pill map-status-pill--accent">
-                    {formatDistance(liveRouteSummary.distanceMeters)} /{" "}
-                    {formatDuration(liveRouteSummary.durationSeconds)}
-                  </span>
-                ) : null}
-              </div>
             </section>
             <section className="map-glass-card map-results-card">
-              <div className="map-results-card__head">
-                <div>
-                  <h4>{resultTitle}</h4>
-                  <p className="map-results-card__context">
-                    {resultContextLabel}
-                  </p>
-                </div>
-                <span>{resultPlaces.length} 个</span>
-              </div>
               {resultPlaces.length > 0 ? (
                 <div className="map-results-list">
                   {resultPlaces.map((place) => (

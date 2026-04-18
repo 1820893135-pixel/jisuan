@@ -11,6 +11,7 @@ import type {
   PlannerForm,
   RouteMode,
   RoutePlan,
+  UpdatePasswordPayload,
   User,
 } from '../types'
 
@@ -21,6 +22,7 @@ export interface TravelAppStore {
   authForm: {
     username: string
     password: string
+    confirmPassword: string
     captchaCode: string
     captchaId: string
   }
@@ -42,6 +44,8 @@ export interface TravelAppStore {
   handleGeneratePlan: (overrides?: Partial<PlannerForm>) => Promise<PlannerGenerationResult | null>
   handleLogout: () => void
   handlePlanRoute: () => Promise<void>
+  handleProfilePasswordUpdate: (payload: UpdatePasswordPayload) => Promise<void>
+  handleProfileUsernameUpdate: (username: string) => Promise<User>
   handleRemoveFavorite: (poiId: string) => Promise<void>
   handleToggleFavorite: (poiId: string) => Promise<void>
   health: HealthResponse | null
@@ -60,7 +64,10 @@ export interface TravelAppStore {
   selectCity: (city: string) => Promise<void>
   openAuthDialog: (mode?: 'login' | 'register') => void
   refreshAuthCaptcha: () => Promise<void>
-  setAuthField: (field: 'username' | 'password' | 'captchaCode', value: string) => void
+  setAuthField: (
+    field: 'username' | 'password' | 'confirmPassword' | 'captchaCode',
+    value: string,
+  ) => void
   setAuthMode: (mode: 'login' | 'register') => void
   setRouteMode: (mode: RouteMode) => void
   styleOptions: string[]

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Clock, MapPin, Star } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MapPin, Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getHomeHeroSlides, getPoiMedia } from '../content/heritageMedia'
@@ -11,14 +11,10 @@ export function HomePage() {
   const [activeSlide, setActiveSlide] = useState(0)
 
   useEffect(() => {
-    if (heroSlides.length <= 1) {
-      return
-    }
-
+    if (heroSlides.length <= 1) return
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % heroSlides.length)
     }, 5200)
-
     return () => window.clearInterval(timer)
   }, [heroSlides.length])
 
@@ -104,7 +100,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="content-section">
+      <section className="content-section home-hotspots">
         <div className="section-header">
           <h2>热门景点</h2>
           <Link className="text-link" to="/map?scope=national">
@@ -115,7 +111,7 @@ export function HomePage() {
 
         <div className="card-grid">
           {featuredPois.map((poi, index) => {
-            const media = getPoiMedia(poi.id, index)
+            const media = getPoiMedia(poi.id, index, poi.imageSrc, poi.name)
             const target = guide
               ? `/map?city=${encodeURIComponent(guide.city)}&poi=${encodeURIComponent(poi.id)}&view=immersive`
               : '/map?scope=national'
@@ -133,15 +129,10 @@ export function HomePage() {
                 <div className="heritage-card__body">
                   <h3>{poi.name}</h3>
                   <p>{poi.type}</p>
-
                   <div className="heritage-card__meta">
                     <span>
                       <MapPin className="icon-4" />
                       {guide?.city ?? '全国导览'}
-                    </span>
-                    <span>
-                      <Clock className="icon-4" />
-                      {poi.duration}
                     </span>
                   </div>
                 </div>

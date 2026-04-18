@@ -22,6 +22,18 @@ const createUserStatement = db.prepare(`
   VALUES (@id, @username, @passwordHash, @createdAt)
 `);
 
+const updateUsernameStatement = db.prepare(`
+  UPDATE users
+  SET username = @username
+  WHERE id = @userId
+`);
+
+const updatePasswordHashStatement = db.prepare(`
+  UPDATE users
+  SET password_hash = @passwordHash
+  WHERE id = @userId
+`);
+
 function mapUser(row: UserRow): AppUser {
   return {
     id: row.id,
@@ -48,6 +60,19 @@ export function findUserById(userId: string) {
   return row ? mapUser(row) : null;
 }
 
+export function findUserAuthById(userId: string) {
+  const row = findByIdStatement.get(userId) as UserRow | undefined;
+
+  if (!row) {
+    return null;
+  }
+
+  return {
+    user: mapUser(row),
+    passwordHash: row.password_hash,
+  };
+}
+
 export function createUser(username: string, passwordHash: string) {
   const user: AppUser = {
     id: randomUUID(),
@@ -63,4 +88,20 @@ export function createUser(username: string, passwordHash: string) {
   });
 
   return user;
+}
+
+export function updateUsernameById(userId: string, username: string) {
+  updateUsernameStatement.run({
+    userId,
+    username,
+  });
+
+  return findUserById(userId);
+}
+
+export function updatePasswordHashById(userId: string, passwordHash: string) {
+  updatePasswordHashStatement.run({
+    userId,
+    passwordHash,
+  });
 }

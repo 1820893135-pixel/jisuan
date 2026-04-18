@@ -1,3 +1,6 @@
+import { worldHeritageData } from '../data/worldHeritageData'
+import type { Poi } from '../types'
+
 export interface HomeHeroSlide {
   alt: string
   caption: string
@@ -70,6 +73,22 @@ const cityHeroMedia: Record<string, { alt: string; src: string }> = {
     alt: '成都传统街区与灯影',
     src: 'https://images.unsplash.com/photo-1739538752106-1d46747504a7?auto=format&fit=crop&w=1600&q=80',
   },
+  山西: {
+    alt: '山西文化遗产景致',
+    src: '/images/heritage/pingyao.jpg',
+  },
+  山西省: {
+    alt: '山西文化遗产景致',
+    src: '/images/heritage/pingyao.jpg',
+  },
+  太原: {
+    alt: '太原文化游线景致',
+    src: '/images/heritage/pingyao.jpg',
+  },
+  太原市: {
+    alt: '太原文化游线景致',
+    src: '/images/heritage/pingyao.jpg',
+  },
 }
 
 const poiMedia: Record<string, { alt: string; src: string }> = {
@@ -130,23 +149,115 @@ const fallbackPool = [
   'https://images.unsplash.com/photo-1739538752106-1d46747504a7?auto=format&fit=crop&w=1200&q=80',
 ]
 
+type StopPoiMedia = Pick<Poi, 'id' | 'imageSrc' | 'name'>
+
+function normalizeSearchText(value?: string) {
+  return value
+    ?.trim()
+    .toLowerCase()
+    .replace(/[·\s、，。；：！？（）()[\]【】"'’‘-]/g, '') ?? ''
+}
+
+function scoreNameMatch(input: string, candidate: string) {
+  if (!input || !candidate) {
+    return 0
+  }
+
+  if (input === candidate) {
+    return candidate.length + 100
+  }
+
+  if (input.includes(candidate) || candidate.includes(input)) {
+    return Math.min(input.length, candidate.length)
+  }
+
+  return 0
+}
+
+function findCityHero(city?: string) {
+  if (!city) {
+    return null
+  }
+
+  const exactMatch = cityHeroMedia[city]
+  if (exactMatch) {
+    return exactMatch
+  }
+
+  const simplifiedCity = city.replace(/省|市|特别行政区|自治区/g, '')
+  return cityHeroMedia[simplifiedCity] ?? null
+}
+
 export function getHomeHeroSlides() {
   return homeHeroSlides
 }
 
 export function getCityHero(city?: string) {
-  if (!city) {
-    return cityHeroMedia.杭州
-  }
-
-  return cityHeroMedia[city] ?? cityHeroMedia.杭州
+  return findCityHero(city) ?? cityHeroMedia.杭州
 }
 
-export function getPoiMedia(poiId: string, index = 0) {
+export function getPoiMedia(
+  poiId: string,
+  index = 0,
+  preferredImageSrc?: string,
+  preferredAlt?: string,
+) {
+  if (preferredImageSrc?.trim()) {
+    return {
+      alt: preferredAlt?.trim() || '中国文化遗产景点',
+      src: preferredImageSrc,
+    }
+  }
   return (
     poiMedia[poiId] ?? {
       alt: '中国文化遗产景点',
       src: fallbackPool[index % fallbackPool.length],
     }
   )
+}
+
+export function getItineraryStopMedia(
+  stopName: string,
+  city?: string,
+  index = 0,
+  guidePois: StopPoiMedia[] = [],
+) {
+  const stopKey = normalizeSearchText(stopName)
+
+  const matchedPoi = guidePois
+    .map((poi) => ({
+      poi,
+      score: scoreNameMatch(stopKey, normalizeSearchText(poi.name)),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score)[0]?.poi
+
+  if (matchedPoi) {
+    return getPoiMedia(matchedPoi.id, index, matchedPoi.imageSrc, stopName)
+  }
+
+  const matchedHeritage = worldHeritageData
+    .map((heritage) => ({
+      heritage,
+      score: scoreNameMatch(stopKey, normalizeSearchText(heritage.name)),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score)[0]?.heritage
+
+  if (matchedHeritage) {
+    return {
+      alt: matchedHeritage.name,
+      src: matchedHeritage.image,
+    }
+  }
+
+  const cityHero = findCityHero(city)
+  if (cityHero) {
+    return cityHero
+  }
+
+  return {
+    alt: '中国文化遗产景致',
+    src: fallbackPool[index % fallbackPool.length],
+  }
 }

@@ -30,3 +30,11 @@ export function writePlannerChatMessages(messages: PlannerChatMessage[]) {
     JSON.stringify(messages.slice(-24)),
   )
 }
+
+export function clearPlannerChatMessages() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.localStorage.removeItem(plannerChatStorageKey)
+}

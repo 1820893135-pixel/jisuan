@@ -1,5 +1,12 @@
-import { LogIn, RefreshCw, ShieldCheck, UserPlus, X } from 'lucide-react'
-import { useEffect } from 'react'
+import { Eye, EyeOff, LogIn, RefreshCw, ShieldCheck, UserPlus, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { travelApi } from '../api'
+import {
+  getPasswordVisibilityToggleMeta,
+  getRegisterPasswordMatchError,
+  getRegisterPasswordValidationErrors,
+  getRegisterUsernameHint,
+} from '../lib/authValidation'
 import { useTravelApp } from '../context/useTravelApp'
 
 function buildCaptchaSrc(svg: string) {
@@ -21,6 +28,9 @@ export function AuthDialog() {
     setAuthField,
     setAuthMode,
   } = useTravelApp()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [usernameHint, setUsernameHint] = useState('')
 
   useEffect(() => {
     if (!authDialogOpen) {
@@ -40,6 +50,55 @@ export function AuthDialog() {
     }
   }, [authDialogOpen, closeAuthDialog])
 
+  useEffect(() => {
+    if (!authDialogOpen) {
+      setShowPassword(false)
+      setShowConfirmPassword(false)
+      setUsernameHint('')
+    }
+  }, [authDialogOpen])
+
+  useEffect(() => {
+    if (authMode !== 'register') {
+      setShowConfirmPassword(false)
+      setUsernameHint('')
+    }
+  }, [authMode])
+
+  useEffect(() => {
+    if (!authDialogOpen || authMode !== 'register') {
+      setUsernameHint('')
+      return
+    }
+
+    const username = authForm.username.trim()
+
+    if (username.length < 3) {
+      setUsernameHint('')
+      return
+    }
+
+    let cancelled = false
+    const timer = window.setTimeout(async () => {
+      try {
+        const availability = await travelApi.checkUsernameAvailability(username)
+
+        if (!cancelled) {
+          setUsernameHint(getRegisterUsernameHint(username, availability))
+        }
+      } catch {
+        if (!cancelled) {
+          setUsernameHint('')
+        }
+      }
+    }, 320)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [authDialogOpen, authMode, authForm.username])
+
   if (!authDialogOpen) {
     return null
   }
@@ -49,6 +108,23 @@ export function AuthDialog() {
     authMode === 'login'
       ? '登录后可同步收藏点位、保留行程偏好，并继续使用地图导览。'
       : '创建账号后可跨设备保存收藏景点和路线偏好。'
+  const registerPasswordErrors =
+    authMode === 'register' ? getRegisterPasswordValidationErrors(authForm.password) : []
+  const registerPasswordHint =
+    authMode !== 'register'
+      ? ''
+      : authForm.password
+        ? registerPasswordErrors[0] ?? '当前密码强度符合要求，可用于注册。'
+        : '注册密码需为 12-72 位，且包含大小写字母、数字和特殊字符，不支持空格。'
+  const confirmPasswordHint =
+    authMode !== 'register'
+      ? ''
+      : authForm.confirmPassword
+        ? getRegisterPasswordMatchError(authForm.password, authForm.confirmPassword) ||
+          '两次输入一致，可以继续注册。'
+        : '请再次输入一次相同密码，注册时会校验两次输入是否一致。'
+  const passwordVisibilityToggle = getPasswordVisibilityToggleMeta(showPassword)
+  const confirmPasswordVisibilityToggle = getPasswordVisibilityToggleMeta(showConfirmPassword)
 
   return (
     <div
@@ -116,18 +192,64 @@ export function AuthDialog() {
               type="text"
               value={authForm.username}
             />
+            {authMode === 'register' && usernameHint ? (
+              <small className="auth-field__hint auth-field__hint--warning">{usernameHint}</small>
+            ) : null}
           </label>
 
           <label className="auth-field">
             <span>密码</span>
-            <input
-              autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}
-              onChange={(event) => setAuthField('password', event.target.value)}
-              placeholder="请输入至少 8 位密码"
-              type="password"
-              value={authForm.password}
-            />
+            <div className="auth-field__input-wrap">
+              <input
+                autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}
+                onChange={(event) => setAuthField('password', event.target.value)}
+                placeholder={authMode === 'login' ? '请输入登录密码' : '请输入 12-72 位高强度密码'}
+                type={passwordVisibilityToggle.inputType}
+                value={authForm.password}
+              />
+              <button
+                aria-label={passwordVisibilityToggle.label}
+                className="auth-field__toggle"
+                onClick={() => setShowPassword((current) => !current)}
+                title={passwordVisibilityToggle.label}
+                type="button"
+              >
+                {showPassword ? <EyeOff className="icon-4" /> : <Eye className="icon-4" />}
+                <small className="auth-field__toggle-text">{showPassword ? '隐藏' : '显示'}</small>
+              </button>
+            </div>
+            {authMode === 'register' ? (
+              <small className="auth-field__hint">{registerPasswordHint}</small>
+            ) : null}
           </label>
+
+          {authMode === 'register' ? (
+            <label className="auth-field">
+              <span>确认密码</span>
+              <div className="auth-field__input-wrap">
+                <input
+                  autoComplete="new-password"
+                  onChange={(event) => setAuthField('confirmPassword', event.target.value)}
+                  placeholder="请再次输入相同密码"
+                  type={confirmPasswordVisibilityToggle.inputType}
+                  value={authForm.confirmPassword}
+                />
+                <button
+                  aria-label={confirmPasswordVisibilityToggle.label}
+                  className="auth-field__toggle"
+                  onClick={() => setShowConfirmPassword((current) => !current)}
+                  title={confirmPasswordVisibilityToggle.label}
+                  type="button"
+                >
+                  {showConfirmPassword ? <EyeOff className="icon-4" /> : <Eye className="icon-4" />}
+                  <small className="auth-field__toggle-text">
+                    {showConfirmPassword ? '隐藏' : '显示'}
+                  </small>
+                </button>
+              </div>
+              <small className="auth-field__hint">{confirmPasswordHint}</small>
+            </label>
+          ) : null}
 
           <div className="auth-field auth-field--captcha">
             <label>

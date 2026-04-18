@@ -1,19 +1,25 @@
 import {
   Bot,
   CalendarDays,
-  History,
   MapPinned,
   SendHorizonal,
-  Sparkles,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTravelApp } from '../context/useTravelApp'
-import { formatDistance, formatDuration } from '../lib/format'
+import {
+  getCompactPlannerGreeting,
+  isLegacyPlannerGreeting,
+  sanitizePlannerCopy,
+} from '../lib/plannerCopy'
 import {
   readPlannerChatMessages,
   writePlannerChatMessages,
 } from '../lib/plannerChatMemory'
+import { resolvePlannerCity } from '../lib/plannerPageHelpers'
+import { getItineraryStopMedia } from '../content/heritageMedia'
 import type { PlannerChatMessage, PlannerForm, PlannerGenerationResult } from '../types'
+
+const plannerAssistantName = '文脉行程师'
 
 function createMessage(role: PlannerChatMessage['role'], text: string): PlannerChatMessage {
   return {
@@ -22,14 +28,6 @@ function createMessage(role: PlannerChatMessage['role'], text: string): PlannerC
     role,
     text,
   }
-}
-
-function buildGreeting(form: PlannerForm, historyCount: number) {
-  if (historyCount > 0) {
-    return `我记得你最近在看 ${form.city}，默认先按 ${form.days} 天、${form.budget}、${form.style} 来继续。直接告诉我“想去哪、玩几天、预算多少、重点想看什么”，我就帮你整理路线。`
-  }
-
-  return '直接和我说你的想法，比如“去陕西玩 3 天，预算 3000，想多看博物馆和夜游”，我会边记边帮你规划。'
 }
 
 function normalizeBudget(message: string, currentBudget: string) {
@@ -97,20 +95,15 @@ function pickInterests(message: string, currentInterests: string[]) {
 function deriveOverrides(
   message: string,
   form: PlannerForm,
-  cityNames: string[],
+  cityOptions: Array<{ capital?: string; city: string }>,
 ): Partial<PlannerForm> {
-  const matchedCity =
-    [...cityNames]
-      .sort((left, right) => right.length - left.length)
-      .find((city) => message.includes(city)) ?? form.city
-
   const dayMatch = message.match(/(\d+)\s*(天|日)/)
   const days = dayMatch ? Math.min(5, Math.max(1, Number(dayMatch[1]) || form.days)) : form.days
   const noteParts = [form.note, message].filter(Boolean)
 
   return {
     budget: normalizeBudget(message, form.budget),
-    city: matchedCity,
+    city: resolvePlannerCity(message, form.city, cityOptions),
     days,
     interests: pickInterests(message, form.interests),
     note: noteParts.slice(-3).join('；'),
@@ -124,13 +117,24 @@ function buildAssistantReply(result: PlannerGenerationResult) {
 
   return [
     `我先按 ${result.form.city} ${result.form.days} 天来帮你规划，预算参考 ${result.form.budget}，路线风格偏 ${result.form.style}。`,
-    result.itinerary.overview,
+    sanitizePlannerCopy(result.itinerary.overview),
     `第一天我会从 ${firstDay?.theme ?? '城市主线'} 开始，重点放在 ${firstStops}。`,
-    '这些偏好我已经记住了，你接着补充“想压缩预算”“多加夜游”“换个省份”就行。',
-  ].join('\n\n')
+    '这些条件我已经整理进当前方案里，你接着补充“想压缩预算”“多加夜游”“换个省份”就行。',
+  ]
+    .map((section) => sanitizePlannerCopy(section))
+    .join('\n\n')
 }
 
-export function PlannerPage() {
+function createGreetingMessage(form: PlannerForm, historyCount: number): PlannerChatMessage {
+  return {
+    createdAt: new Date().toISOString(),
+    id: 'planner-greeting',
+    role: 'assistant',
+    text: getCompactPlannerGreeting(form, historyCount),
+  }
+}
+
+function AuthenticatedPlannerWorkspace() {
   const {
     cities,
     error,
@@ -141,7 +145,6 @@ export function PlannerPage() {
     itineraryHistory,
     planning,
     restoreItineraryHistory,
-    routePlan,
   } = useTravelApp()
 
   const [draft, setDraft] = useState('')
@@ -149,31 +152,14 @@ export function PlannerPage() {
     readPlannerChatMessages(),
   )
   const [selectedDay, setSelectedDay] = useState(1)
-
-  const cityNames = useMemo(() => cities.map((city) => city.city), [cities])
-  const currentDayPlan = itinerary?.dailyPlan.find((day) => day.day === selectedDay) ?? null
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      return
-    }
-
-    setMessages([createMessage('assistant', buildGreeting(form, itineraryHistory.length))])
-  }, [form, itineraryHistory.length, messages.length])
+  const activeDay = itinerary && selectedDay <= itinerary.dailyPlan.length ? selectedDay : 1
+  const currentDayPlan = itinerary?.dailyPlan.find((day) => day.day === activeDay) ?? null
+  const threadMessages =
+    messages.length > 0 ? messages : [createGreetingMessage(form, itineraryHistory.length)]
 
   useEffect(() => {
     writePlannerChatMessages(messages)
   }, [messages])
-
-  useEffect(() => {
-    if (!itinerary) {
-      return
-    }
-
-    if (selectedDay > itinerary.dailyPlan.length) {
-      setSelectedDay(1)
-    }
-  }, [itinerary, selectedDay])
 
   async function submitMessage(prefilled?: string) {
     const text = (prefilled ?? draft).trim()
@@ -186,9 +172,13 @@ export function PlannerPage() {
       'assistant',
       '我在整理你的偏好、景点顺序和路线节奏，马上给你一版可直接出发的方案。',
     )
-    const overrides = deriveOverrides(text, form, cityNames)
+    const overrides = deriveOverrides(text, form, cities)
 
-    setMessages((current) => [...current, userMessage, thinkingMessage])
+    setMessages((current) => [
+      ...(current.length > 0 ? current : [createGreetingMessage(form, itineraryHistory.length)]),
+      userMessage,
+      thinkingMessage,
+    ])
     setDraft('')
 
     const result = await handleGeneratePlan(overrides)
@@ -201,7 +191,7 @@ export function PlannerPage() {
           ...next,
           createMessage(
             'assistant',
-            error || '这次规划没有成功，我已经保留了你的偏好，你可以直接补一句要求后继续让我重试。',
+            error || '这次规划没有成功，我已经保留了你刚才的条件，你可以直接补一句要求后继续让我重试。',
           ),
         ]
       }
@@ -222,54 +212,50 @@ export function PlannerPage() {
       ...current,
       createMessage(
         'assistant',
-        `我已经帮你恢复 ${historyEntry.guide.city} 的历史方案：${historyEntry.itinerary.title}。之前记住的预算是 ${historyEntry.form.budget}，偏好是 ${historyEntry.form.interests.join('、')}。`,
+        `我已经帮你恢复 ${historyEntry.guide.city} 的历史方案：${historyEntry.itinerary.title}。之前方案里的预算是 ${historyEntry.form.budget}，偏好是 ${historyEntry.form.interests.join('、')}。`,
       ),
     ])
   }
 
   return (
-    <div className="screen-page itinerary-page planner-chat-page">
-      <header className="page-header">
-        <div className="planner-page__header">
-          <div>
-            <span className="map-kicker">智能行程</span>
-            <h1>我帮你规划</h1>
-            <p className="planner-page__lede">
-              像聊天一样把需求告诉我，我会记住你的城市、预算、天数和偏好，再把路线整理成可直接出发的方案。
-            </p>
-          </div>
-        </div>
-      </header>
-
+    <>
       <section className="content-section planner-chat-layout">
         <article className="planner-chat-card">
-          <div className="section-header">
+          <div className="section-header planner-panel__header">
             <div>
               <h2>规划对话</h2>
-              <p className="map-summary__hint">越像真实聊天越好，我会把你最新说过的条件继续带到后面的规划里。</p>
             </div>
-            <span className="section-meta">
+            <span className="section-meta planner-panel__meta">
               <Bot className="icon-4" />
-              带记忆的路线助手
+              文脉路线规划
             </span>
           </div>
 
           <div className="planner-chat-thread">
-            {messages.map((message) => (
-              <article
-                key={message.id}
-                className={
-                  message.role === 'assistant'
-                    ? 'planner-chat-message planner-chat-message--assistant'
-                    : 'planner-chat-message planner-chat-message--user'
-                }
-              >
-                <span className="planner-chat-message__role">
-                  {message.role === 'assistant' ? '我帮你规划' : '你'}
-                </span>
-                <p>{message.text}</p>
-              </article>
-            ))}
+            {threadMessages.map((message) => {
+              const displayText =
+                message.role === 'assistant'
+                  ? isLegacyPlannerGreeting(message.text)
+                    ? getCompactPlannerGreeting(form, itineraryHistory.length)
+                    : sanitizePlannerCopy(message.text)
+                  : message.text
+
+              return (
+                <article
+                  key={message.id}
+                  className={
+                    message.role === 'assistant'
+                      ? 'planner-chat-message planner-chat-message--assistant'
+                      : 'planner-chat-message planner-chat-message--user'
+                  }
+                >
+                  <span className="planner-chat-message__role">
+                    {message.role === 'assistant' ? plannerAssistantName : '你'}
+                  </span>
+                  <p>{displayText}</p>
+                </article>
+              )
+            })}
           </div>
 
           <div className="planner-chat-composer">
@@ -296,10 +282,10 @@ export function PlannerPage() {
         </article>
 
         <aside className="planner-memory-card">
-          <div className="section-header">
+          <div className="section-header planner-panel__header">
             <div>
-              <h2>当前记忆</h2>
-              <p className="map-summary__hint">这里会持续保留你最近一次确认过的规划条件。</p>
+              <h2>当前规划</h2>
+              <p className="map-summary__hint">这里展示你最近一次确认的规划条件。</p>
             </div>
           </div>
 
@@ -331,12 +317,8 @@ export function PlannerPage() {
           </div>
 
           <div className="planner-history-stack">
-            <div className="section-header">
-              <h3>历史记忆</h3>
-              <span className="section-meta">
-                <History className="icon-4" />
-                自动保存最近 8 次
-              </span>
+            <div className="section-header planner-panel__header">
+              <h3>历史规划</h3>
             </div>
 
             {itineraryHistory.length > 0 ? (
@@ -378,70 +360,104 @@ export function PlannerPage() {
               </div>
             </div>
 
-            <p>{itinerary.overview}</p>
-            <p className="planner-overview-card__reason">{itinerary.routeReason}</p>
+            <p>{sanitizePlannerCopy(itinerary.overview)}</p>
+            <p className="planner-overview-card__reason">
+              {sanitizePlannerCopy(itinerary.routeReason)}
+            </p>
 
             <div className="planner-route-rail">
               {itinerary.dailyPlan.map((day) => (
                 <button
                   key={day.day}
-                  className={selectedDay === day.day ? 'planner-route-node active' : 'planner-route-node'}
+                  className={activeDay === day.day ? 'planner-route-node active' : 'planner-route-node'}
                   onClick={() => setSelectedDay(day.day)}
                   type="button"
                 >
                   <span>Day {day.day}</span>
-                  <strong>{day.theme}</strong>
+                  <strong>{sanitizePlannerCopy(day.theme)}</strong>
                   <small>{day.stops.length} 个停靠点</small>
                 </button>
               ))}
             </div>
-
-            {routePlan ? (
-              <div className="planner-route-summary">
-                <div className="summary-tile">
-                  <span>路线长度</span>
-                  <strong>{formatDistance(routePlan.distanceMeters)}</strong>
-                </div>
-                <div className="summary-tile">
-                  <span>预计时长</span>
-                  <strong>{formatDuration(routePlan.durationSeconds)}</strong>
-                </div>
-                <div className="summary-tile">
-                  <span>路线节点</span>
-                  <strong>{routePlan.waypoints.length} 个</strong>
-                </div>
-              </div>
-            ) : null}
           </div>
 
           {currentDayPlan ? (
             <div className="planner-timeline">
-              {currentDayPlan.stops.map((stop, index) => (
-                <article key={`${currentDayPlan.day}-${stop.time}-${stop.name}`} className="planner-timeline__item">
-                  <div className="planner-timeline__dot">
-                    <span>{index + 1}</span>
-                  </div>
-                  <div className="planner-timeline__content">
-                    <div className="planner-timeline__time">{stop.time}</div>
-                    <h3>{stop.name}</h3>
-                    <div className="planner-timeline__meta">
-                      <span>
-                        <MapPinned className="icon-4" />
-                        {stop.transport}
-                      </span>
-                      <span>
-                        <Sparkles className="icon-4" />
-                        {stop.cost}
-                      </span>
+              {currentDayPlan.stops.map((stop, index) => {
+                const stopMedia = getItineraryStopMedia(
+                  stop.name,
+                  guide?.city ?? form.city,
+                  index,
+                  guide?.pois ?? [],
+                )
+
+                return (
+                  <article
+                    key={`${currentDayPlan.day}-${stop.time}-${stop.name}`}
+                    className="planner-timeline__item"
+                  >
+                    <div className="planner-timeline__dot">
+                      <span>{index + 1}</span>
                     </div>
-                    <p>{stop.activity}</p>
-                  </div>
-                </article>
-              ))}
+                    <div className="planner-timeline__content">
+                      <div className="planner-timeline__media">
+                        <img alt={stopMedia.alt} loading="lazy" src={stopMedia.src} />
+                      </div>
+                      <div className="planner-timeline__body">
+                        <div className="planner-timeline__time">{stop.time}</div>
+                        <h3>{sanitizePlannerCopy(stop.name)}</h3>
+                        <div className="planner-timeline__meta">
+                          <span>
+                            <MapPinned className="icon-4" />
+                            {sanitizePlannerCopy(stop.transport)}
+                          </span>
+                        </div>
+                        <p>{sanitizePlannerCopy(stop.activity)}</p>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           ) : null}
         </section>
       ) : null}
+    </>
+  )
+}
+
+export function PlannerPage() {
+  const { openAuthDialog, user } = useTravelApp()
+
+  return (
+    <div className="screen-page itinerary-page planner-chat-page">
+      <header className="page-header planner-page__hero">
+        <div className="planner-page__header">
+          <div className="planner-page__title-block">
+            <h1>{plannerAssistantName}</h1>
+          </div>
+        </div>
+      </header>
+
+      {user ? (
+        <AuthenticatedPlannerWorkspace key={user.id} />
+      ) : (
+        <section className="content-section">
+          <div className="planner-auth-gate">
+            <span className="map-kicker">登录后可用</span>
+            <h2>请先登录或注册</h2>
+            <p>登录后才能继续生成行程、查看历史规划，并保留你的文化遗产导览偏好。</p>
+            <div className="planner-auth-gate__actions">
+              <button className="button-primary" onClick={() => openAuthDialog('login')} type="button">
+                登录
+              </button>
+              <button className="button-secondary" onClick={() => openAuthDialog('register')} type="button">
+                注册
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
