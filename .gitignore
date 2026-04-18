@@ -8,7 +8,7 @@ dist/
 !**/.env.production.example
 *.log
 npm-cache/
-server/data/
+/server/data/
 .vercel/
 .railway/
 .playwright-cli/

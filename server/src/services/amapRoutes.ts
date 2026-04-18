@@ -236,7 +236,7 @@ export async function planCityRoute(
         (total, segment) => total + segment.durationSeconds,
         0,
       ),
-      waypoints: pois.map<RouteWaypoint>((poi) => ({
+      waypoints: pois.map<RouteWaypoint>((poi: Poi) => ({
         poiId: poi.id,
         name: poi.name,
         location: poi.location,
