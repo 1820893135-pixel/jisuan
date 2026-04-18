@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
 import { config } from "./config.js";
 import { createApp } from "./app.js";
-
-dotenv.config({ override: true });
 
 const app = createApp();
 

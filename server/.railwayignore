@@ -1,0 +1,8 @@
+.env
+.env.local
+.env.development
+.env.production
+dist
+node_modules
+npm-cache
+*.log

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "node:path";
 
-dotenv.config({ override: true });
+dotenv.config();
 
 export const config = {
   port: Number(process.env.PORT || 3001),
