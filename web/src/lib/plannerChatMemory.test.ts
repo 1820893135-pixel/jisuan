@@ -6,7 +6,7 @@ import {
   clearPlannerChatMessages,
   readPlannerChatMessages,
   writePlannerChatMessages,
-} from './plannerChatMemory'
+} from './plannerChatMemory.ts'
 
 function withMockWindow(run: () => void) {
   const hadWindow = 'window' in globalThis

@@ -7,8 +7,8 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { TravelAppContext, type TravelAppStore } from '../context/travelAppStore'
-import { ProfilePage } from './ProfilePage'
+import { TravelAppContext, type TravelAppStore } from '../context/travelAppStore.ts'
+import { ProfilePage } from './ProfilePage.tsx'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const profilePageSource = readFileSync(resolve(currentDir, 'ProfilePage.tsx'), 'utf8')

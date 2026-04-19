@@ -7,9 +7,10 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { TravelAppContext, type TravelAppStore } from '../context/travelAppStore'
-import { getCompactPlannerGreeting, sanitizePlannerCopy } from '../lib/plannerCopy'
-import { PlannerPage } from './PlannerPage'
+import { MemoryRouter } from 'react-router-dom'
+import { TravelAppContext, type TravelAppStore } from '../context/travelAppStore.ts'
+import { getCompactPlannerGreeting, sanitizePlannerCopy } from '../lib/plannerCopy.ts'
+import { PlannerPage } from './PlannerPage.tsx'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const plannerPageSource = readFileSync(resolve(currentDir, 'PlannerPage.tsx'), 'utf8')
@@ -260,7 +261,11 @@ test('planner page asks guests to log in before showing saved itinerary data', (
           user: null,
         }),
       },
-      React.createElement(PlannerPage),
+      React.createElement(
+        MemoryRouter,
+        null,
+        React.createElement(PlannerPage),
+      ),
     ),
   )
 

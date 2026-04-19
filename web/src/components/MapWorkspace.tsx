@@ -267,6 +267,36 @@ function getMarkerLabel(place: DiscoveryPlace, index: number) {
   return place.source === "amap-nearby" ? "近" : "搜";
 }
 
+function getMarkerTone(place: DiscoveryPlace) {
+  if (place.source === "guide") {
+    return "map-scene-marker--guide";
+  }
+
+  if (place.source === "mcp-discovery") {
+    return "map-scene-marker--discovery";
+  }
+
+  return place.source === "amap-nearby"
+    ? "map-scene-marker--nearby"
+    : "map-scene-marker--search";
+}
+
+function buildMarkerContent(
+  place: DiscoveryPlace,
+  index: number,
+  isActive: boolean,
+) {
+  const classNames = [
+    "map-scene-marker",
+    getMarkerTone(place),
+    isActive ? "is-active" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return `<div class="${classNames}"><span class="map-scene-marker__badge">${getMarkerLabel(place, index)}</span><span class="map-scene-marker__drop"></span></div>`;
+}
+
 function getPlaceSecondaryLabel(place: DiscoveryPlace) {
   if (place.source === "guide") {
     return `建议停留 ${place.subtitle}`;
@@ -882,7 +912,7 @@ export function MapWorkspace({
     ? resolvedSelectedPlace.businessArea
       ? `${resolvedSelectedPlace.address} · ${resolvedSelectedPlace.businessArea}`
       : resolvedSelectedPlace.address
-    : "正在通过高德逆地理编码补全详细地址";
+    : "正在补全详细地址";
   const weatherLine = cityWeather
     ? [
         cityWeather.city || city,
@@ -1038,28 +1068,6 @@ export function MapWorkspace({
     }
 
     setSelectedPlaceId(placeId);
-    setIsInspectorVisible(true);
-  }
-
-  function handleWorkspacePointerMove(
-    event: React.MouseEvent<HTMLDivElement>,
-  ) {
-    const target = event.target as HTMLElement | null;
-    const isInsideInspector = Boolean(
-      target?.closest(".map-shell__inspector"),
-    );
-
-    if (isInsideInspector) {
-      setIsInspectorVisible(true);
-      return;
-    }
-
-    const rect = event.currentTarget.getBoundingClientRect();
-    const revealZone = Math.max(72, Math.min(120, rect.width * 0.1));
-    const nextVisible = event.clientX >= rect.right - revealZone;
-    setIsInspectorVisible((current) =>
-      current === nextVisible ? current : nextVisible,
-    );
   }
 
   async function ensureMapReady() {
@@ -1306,7 +1314,11 @@ export function MapWorkspace({
         position: place.location,
         title: place.name,
         label: {
-          content: `<div class="map-pin ${place.source === "guide" ? "" : "map-pin--search"} ${place.id === selectedPlace?.id ? "map-pin--active" : ""}">${getMarkerLabel(place, index)}</div>`,
+          content: buildMarkerContent(
+            place,
+            index,
+            place.id === selectedPlace?.id,
+          ),
           direction: "top",
         },
       });
@@ -1323,7 +1335,8 @@ export function MapWorkspace({
         position: userLocation,
         title: "我的位置",
         label: {
-          content: '<div class="map-pin map-pin--me">我</div>',
+          content:
+            '<div class="map-scene-marker map-scene-marker--me"><span class="map-scene-marker__badge">我</span><span class="map-scene-marker__drop"></span></div>',
           direction: "top",
         },
       });
@@ -1616,12 +1629,19 @@ export function MapWorkspace({
 
   return (
     <div className="map-shell map-shell--immersive map-shell--workspace-layout">
-      <div
-        className="map-shell__stage"
-        onMouseLeave={() => setIsInspectorVisible(false)}
-        onMouseMove={handleWorkspacePointerMove}
-      >
+      <div className="map-shell__stage">
         <div ref={mapContainerRef} className="map-shell__canvas" />
+        <button
+          className={
+            isInspectorVisible
+              ? "map-inspector-toggle is-active"
+              : "map-inspector-toggle"
+          }
+          onClick={() => setIsInspectorVisible((current) => !current)}
+          type="button"
+        >
+          <span>详情</span>
+        </button>
         {!amapKey ? (
         <div className="map-shell__empty">
           <strong>缺少高德地图 Key</strong>

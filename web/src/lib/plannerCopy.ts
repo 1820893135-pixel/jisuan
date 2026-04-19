@@ -20,6 +20,7 @@ export function sanitizePlannerCopy(text: string) {
     .replace(/高德导航/g, '导航')
     .replace(/高德/g, '')
     .replace(/AMap/gi, '')
+    .replace(/\bPOI\b/gi, '景点')
     .replace(/地图节奏/g, '路线节奏')
     .replace(/\s{2,}/g, ' ')
     .trim()

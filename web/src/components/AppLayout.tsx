@@ -1,33 +1,61 @@
 import {
   CalendarDays,
   House,
-  Map,
-  UserRound,
-  Landmark,
   Info,
+  Landmark,
+  Map,
   type LucideIcon,
-} from 'lucide-react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { useTravelApp } from '../context/useTravelApp'
-import { AuthDialog } from './AuthDialog'
+  UserRound,
+} from "lucide-react";
+import { useEffect } from "react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useTravelApp } from "../context/useTravelApp";
 
 const navItems: Array<{
-  icon: LucideIcon
-  label: string
-  match: string
-  path: string
+  icon: LucideIcon;
+  label: string;
+  match: string;
+  path: string;
 }> = [
-  { icon: House, label: '首页', match: '/', path: '/' },
-  { icon: Map, label: '地图', match: '/map', path: '/map?scope=national' },
-  { icon: CalendarDays, label: '行程', match: '/itinerary', path: '/itinerary' },
-  { icon: Landmark, label: '世界遗产', match: '/heritage', path: '/heritage' },
-  { icon: Info, label: '关于我们', match: '/about', path: '/about' },
-  { icon: UserRound, label: '个人中心', match: '/profile', path: '/profile' },
-]
+  { icon: House, label: "首页", match: "/", path: "/" },
+  { icon: Map, label: "地图", match: "/map", path: "/map?scope=national" },
+  { icon: CalendarDays, label: "行程", match: "/itinerary", path: "/itinerary" },
+  { icon: Landmark, label: "世界遗产", match: "/heritage", path: "/heritage" },
+  { icon: Info, label: "关于我们", match: "/about", path: "/about" },
+  { icon: UserRound, label: "个人中心", match: "/profile", path: "/profile" },
+];
 
 export function AppLayout() {
-  const location = useLocation()
-  const { handleLogout, openAuthDialog, user } = useTravelApp()
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {
+    authDialogOpen,
+    authMode,
+    closeAuthDialog,
+    handleLogout,
+    user,
+  } = useTravelApp();
+
+  useEffect(() => {
+    if (!authDialogOpen) {
+      return;
+    }
+
+    const currentPath = `${location.pathname}${location.search}${location.hash}`;
+    navigate(
+      `/auth/${authMode}?from=${encodeURIComponent(currentPath)}`,
+      { replace: false },
+    );
+    closeAuthDialog();
+  }, [
+    authDialogOpen,
+    authMode,
+    closeAuthDialog,
+    location.hash,
+    location.pathname,
+    location.search,
+    navigate,
+  ]);
 
   return (
     <div className="app-frame">
@@ -40,10 +68,16 @@ export function AppLayout() {
                 height="32"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ display: 'block' }}
+                style={{ display: "block" }}
               >
                 <defs>
-                  <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient
+                    id="cloudGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
                     <stop offset="0%" stopColor="#b8860b" />
                     <stop offset="100%" stopColor="#d4af37" />
                   </linearGradient>
@@ -66,21 +100,21 @@ export function AppLayout() {
 
           <nav className="top-nav__links" aria-label="模块入口">
             {navItems.map((item) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               const isActive =
                 location.pathname === item.match ||
-                (item.match !== '/' && location.pathname.startsWith(item.match))
+                (item.match !== "/" && location.pathname.startsWith(item.match));
 
               return (
                 <NavLink
                   key={item.path}
-                  className={isActive ? 'top-nav__link active' : 'top-nav__link'}
+                  className={isActive ? "top-nav__link active" : "top-nav__link"}
                   to={item.path}
                 >
                   <Icon className="icon-5" />
                   <span>{item.label}</span>
                 </NavLink>
-              )
+              );
             })}
           </nav>
 
@@ -99,12 +133,12 @@ export function AppLayout() {
               </div>
             ) : (
               <div className="top-nav__auth">
-                <button className="button-secondary" onClick={() => openAuthDialog('login')} type="button">
+                <NavLink className="button-secondary" to="/auth/login">
                   登录
-                </button>
-                <button className="button-primary" onClick={() => openAuthDialog('register')} type="button">
+                </NavLink>
+                <NavLink className="button-primary" to="/auth/register">
                   注册
-                </button>
+                </NavLink>
               </div>
             )}
           </div>
@@ -114,153 +148,6 @@ export function AppLayout() {
       <main className="app-main">
         <Outlet />
       </main>
-      <AuthDialog />
-
-      <style>{`
-        .top-nav {
-          background: linear-gradient(135deg, #fffcf0 0%, #fff8e7 100%);
-          border-bottom: none;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(212, 175, 55, 0.1);
-          position: relative;
-          z-index: 10;
-        }
-
-        /* 底部微光过渡线 */
-        .top-nav::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, #d4af37, #f5e7a3, #d4af37, transparent);
-          opacity: 0.6;
-        }
-
-        /* 导航栏内部容器：使用 flex 布局，让品牌靠左，其他靠右 */
-        .top-nav__inner {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 24px;
-        }
-
-        /* 品牌区域完全靠左，移除默认边距 */
-        .top-nav__brand {
-          flex-shrink: 0;
-          margin-right: 2rem;
-          display: flex;
-          align-items: center;
-          text-decoration: none;
-        }
-
-        .top-nav__brand-mark svg {
-          stroke: none;
-          stroke-width: 0;
-          border: none;
-          outline: none;
-        }
-
-        .top-nav__brand-copy strong {
-          background: linear-gradient(135deg, #b8860b, #d4af37);
-          background-clip: text;
-          -webkit-background-clip: text;
-          color: transparent;
-          font-weight: 700;
-        }
-
-        .top-nav__brand-copy small {
-          color: #8a7a5a;
-        }
-
-        /* 导航链接容器：居中或自适应，用 gap 分散 */
-        .top-nav__links {
-          display: flex;
-          gap: 2rem;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .top-nav__link {
-          color: #4a5a4a;
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .top-nav__link:hover {
-          color: #b8860b;
-          background: rgba(212, 175, 55, 0.08);
-        }
-
-        .top-nav__link.active {
-          color: #b8860b;
-          position: relative;
-        }
-
-        .top-nav__link.active::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 12px;
-          right: 12px;
-          height: 2px;
-          background: linear-gradient(90deg, #d4af37, #f5e7a3);
-          border-radius: 2px;
-        }
-
-        /* 右侧按钮区域 */
-        .top-nav__actions {
-          flex-shrink: 0;
-        }
-
-        .button-secondary {
-          border-color: #d4af37;
-          color: #b8860b;
-        }
-
-        .button-secondary:hover {
-          background: rgba(212, 175, 55, 0.1);
-          border-color: #d4af37;
-          color: #8a6e2e;
-        }
-
-        .button-primary {
-          background: linear-gradient(135deg, #b8860b, #d4af37);
-          border: none;
-        }
-
-        .button-primary:hover {
-          background: linear-gradient(135deg, #9a6e0a, #c4a030);
-        }
-
-        .top-nav__user-copy strong {
-          color: #b8860b;
-        }
-
-        .top-nav__profile:hover .top-nav__user-copy strong {
-          color: #d4af37;
-        }
-
-        /* 确保主内容区与导航栏紧密贴合 */
-        .app-main {
-          margin-top: 0;
-          padding-top: 0;
-        }
-
-        /* 响应式：小屏幕下减少间距 */
-        @media (max-width: 768px) {
-          .top-nav__inner {
-            padding: 0 16px;
-          }
-          .top-nav__links {
-            gap: 1rem;
-          }
-        }
-      `}</style>
     </div>
-  )
+  );
 }

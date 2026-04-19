@@ -66,12 +66,28 @@ export interface ItineraryHistoryEntry {
 }
 
 export type PlannerChatRole = 'assistant' | 'user'
+export type PlannerChatVariant = 'text' | 'thinking' | 'summary-card'
+
+export interface PlannerSummaryCard {
+  budget: string
+  city: string
+  days: number
+  interests: string[]
+  note: string
+  requestSummary: string
+  stops: string[]
+  style: string
+  targetId: string
+  title: string
+}
 
 export interface PlannerChatMessage {
   createdAt: string
   id: string
   role: PlannerChatRole
   text: string
+  summaryCard?: PlannerSummaryCard
+  variant?: PlannerChatVariant
 }
 
 export interface PlannerForm {

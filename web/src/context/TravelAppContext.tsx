@@ -221,7 +221,6 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     setAuthModeState(mode)
     setAuthDialogOpen(true)
     setError('')
-    void refreshAuthCaptcha()
   }
 
   function closeAuthDialog() {
@@ -233,7 +232,6 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
   function setAuthMode(mode: 'login' | 'register') {
     setAuthModeState(mode)
     setError('')
-    void refreshAuthCaptcha()
   }
 
   async function loadGuide(city: string) {

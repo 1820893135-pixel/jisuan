@@ -2,13 +2,13 @@
 
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { ItineraryHistoryEntry } from '../types'
+import type { ItineraryHistoryEntry } from '../types.ts'
 import {
   clearItineraryHistory,
   readItineraryHistory,
   upsertItineraryHistoryEntry,
   writeItineraryHistory,
-} from './itineraryHistory'
+} from './itineraryHistory.ts'
 
 function createHistoryEntry(index: number): ItineraryHistoryEntry {
   return {

@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { getItineraryStopMedia, getPoiMedia } from './heritageMedia'
+import { getItineraryStopMedia, getPoiMedia } from './heritageMedia.ts'
 
 test('getPoiMedia prefers the poi provided image when available', () => {
   const preferredImageSrc = 'https://example.com/fujian-tulou.jpg'

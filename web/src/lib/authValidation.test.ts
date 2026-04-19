@@ -11,7 +11,7 @@ import {
   getRegisterPasswordMatchError,
   getRegisterPasswordValidationErrors,
   getRegisterUsernameHint,
-} from './authValidation'
+} from './authValidation.ts'
 
 test('register password validation accepts a strong password', () => {
   assert.deepEqual(getRegisterPasswordValidationErrors('Heritage!2026'), [])

@@ -38,7 +38,6 @@ export function ProfilePage() {
     handleProfileUsernameUpdate,
     handleRemoveFavorite,
     itineraryHistory,
-    openAuthDialog,
     restoreItineraryHistory,
     user,
   } = useTravelApp()
@@ -136,12 +135,12 @@ export function ProfilePage() {
             <strong>登录后即可使用个人中心</strong>
             <span>收藏景点、历史行程和后续规划都会保存在账号里。</span>
             <div className="profile-empty__actions">
-              <button className="button-primary" onClick={() => openAuthDialog('login')} type="button">
+              <Link className="button-primary" to="/auth/login?from=%2Fprofile">
                 登录
-              </button>
-              <button className="button-secondary" onClick={() => openAuthDialog('register')} type="button">
+              </Link>
+              <Link className="button-secondary" to="/auth/register?from=%2Fprofile">
                 注册
-              </button>
+              </Link>
             </div>
           </div>
         ) : null}
