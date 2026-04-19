@@ -1,9 +1,15 @@
 const CACHE_NAME = 'lvyou-shell-v1'
 const SHELL_ASSETS = [
   '/',
+  '/favicon.ico',
   '/manifest.webmanifest',
   '/favicon.svg',
+  '/pwa-44.png',
+  '/pwa-71.png',
+  '/pwa-150.png',
   '/pwa-192.png',
+  '/pwa-256.png',
+  '/pwa-310.png',
   '/pwa-512.png',
   '/apple-touch-icon.png',
 ]
