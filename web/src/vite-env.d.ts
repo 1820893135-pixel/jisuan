@@ -187,10 +187,12 @@ declare global {
       showTraffic?: boolean
     }) => unknown
     Marker: new (options: {
+      content?: string
       label?: {
         content: string
         direction: string
       }
+      offset?: unknown
       position: AMapCoordinates
       title?: string
     }) => AMapMarker

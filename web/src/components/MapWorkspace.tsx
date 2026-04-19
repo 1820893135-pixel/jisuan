@@ -1311,16 +1311,14 @@ export function MapWorkspace({
 
     const markers = visiblePlaces.map((place, index) => {
       const marker = new AMap.Marker({
+        content: buildMarkerContent(
+          place,
+          index,
+          place.id === selectedPlace?.id,
+        ),
+        offset: new AMap.Pixel(-17, -42),
         position: place.location,
         title: place.name,
-        label: {
-          content: buildMarkerContent(
-            place,
-            index,
-            place.id === selectedPlace?.id,
-          ),
-          direction: "top",
-        },
       });
 
       marker.on("click", () => handleSelectPlace(place.id));
@@ -1332,13 +1330,11 @@ export function MapWorkspace({
 
     if (userLocation) {
       state.userMarker = new AMap.Marker({
+        content:
+          '<div class="map-scene-marker map-scene-marker--me"><span class="map-scene-marker__drop"><span class="map-scene-marker__label">我</span></span></div>',
+        offset: new AMap.Pixel(-17, -42),
         position: userLocation,
         title: "我的位置",
-        label: {
-          content:
-            '<div class="map-scene-marker map-scene-marker--me"><span class="map-scene-marker__drop"><span class="map-scene-marker__label">我</span></span></div>',
-          direction: "top",
-        },
       });
 
       runMapCommand(() => map.add(state.userMarker));

@@ -20,7 +20,9 @@ test('map workspace uses a detail toggle instead of hover-only inspector reveal'
 test('guide markers render numbers directly inside the pin instead of standalone circles', () => {
   assert.match(mapWorkspaceSource, /map-scene-marker__label/)
   assert.match(mapWorkspaceSource, /map-scene-marker__drop/)
+  assert.match(mapWorkspaceSource, /content:\s*buildMarkerContent\(/)
   assert.doesNotMatch(mapWorkspaceSource, /map-scene-marker__badge/)
+  assert.doesNotMatch(mapWorkspaceSource, /label:\s*\{/)
   assert.doesNotMatch(mapWorkspaceSource, /class="map-pin/)
 })
 
