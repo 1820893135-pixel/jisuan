@@ -118,6 +118,74 @@ test('planner page uses planning-focused assistant copy', () => {
   assert.doesNotMatch(plannerPageSource, /当前记忆/)
   assert.doesNotMatch(plannerPageSource, /历史记忆/)
 })
+test('planner timeline opens a separate baidu search link for each stop card', () => {
+  const markup = renderToStaticMarkup(
+    React.createElement(
+      TravelAppContext.Provider,
+      {
+        value: createMockStore({
+          guide: {
+            center: [116.4074, 39.9042],
+            city: '北京市',
+            pois: [],
+            slogan: '京城中轴',
+            story: '测试导览故事',
+            tags: ['文化'],
+            travelSeasons: ['春'],
+          },
+          itinerary: {
+            dailyPlan: [
+              {
+                day: 1,
+                stops: [
+                  {
+                    activity: '老街漫游，作为中轴线行程开场',
+                    cost: '0',
+                    name: '前门大街',
+                    time: '09:00-10:30',
+                    transport: '步行/地铁',
+                  },
+                  {
+                    activity: '看中轴线地标，感受城市仪式感',
+                    cost: '0',
+                    name: '天安门广场',
+                    time: '10:40-11:30',
+                    transport: '步行',
+                  },
+                ],
+                summary: '中轴线初识',
+                theme: '中轴线初识',
+              },
+            ],
+            overview: '这是一条适合沉浸文化的北京 1 日线。',
+            routeReason: '按中轴线组织更适合第一次到访的游客。',
+            tips: [],
+            title: '北京1天沉浸文化行程',
+          },
+        }),
+      },
+      React.createElement(
+        MemoryRouter,
+        null,
+        React.createElement(PlannerPage),
+      ),
+    ),
+  )
+
+  assert.match(markup, /target="_blank"/)
+  assert.match(
+    markup,
+    new RegExp(
+      encodeURIComponent('北京市 前门大街').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    ),
+  )
+  assert.match(
+    markup,
+    new RegExp(
+      encodeURIComponent('北京市 天安门广场').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    ),
+  )
+})
 
 test('planner page styles define a warm about-inspired surface', () => {
   assert.match(appCssSource, /\.planner-chat-page\s*\{/)

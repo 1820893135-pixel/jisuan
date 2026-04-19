@@ -219,6 +219,17 @@ function wait(ms: number) {
   });
 }
 
+function buildPlannerStopSearchUrl(stopName: string, city: string) {
+  const normalizedStopName = sanitizePlannerCopy(stopName).trim();
+  const normalizedCity = sanitizePlannerCopy(city).trim();
+  const keyword = [normalizedCity, normalizedStopName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  return `https://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`;
+}
+
 function AuthenticatedPlannerWorkspace() {
   const {
     cities,
@@ -612,6 +623,13 @@ function AuthenticatedPlannerWorkspace() {
           {currentDayPlan ? (
             <div className="planner-timeline">
               {currentDayPlan.stops.map((stop, index) => {
+                const stopName = sanitizePlannerCopy(stop.name);
+                const stopTransport = sanitizePlannerCopy(stop.transport);
+                const stopActivity = sanitizePlannerCopy(stop.activity);
+                const stopSearchUrl = buildPlannerStopSearchUrl(
+                  stop.name,
+                  guide?.city ?? form.city,
+                );
                 const stopMedia = getItineraryStopMedia(
                   stop.name,
                   guide?.city ?? form.city,
@@ -627,22 +645,28 @@ function AuthenticatedPlannerWorkspace() {
                     <div className="planner-timeline__dot">
                       <span>{index + 1}</span>
                     </div>
-                    <div className="planner-timeline__content">
+                    <a
+                      aria-label={`打开 ${stopName} 的百度搜索结果`}
+                      className="planner-timeline__content planner-timeline__content--link"
+                      href={stopSearchUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       <div className="planner-timeline__media">
                         <img alt={stopMedia.alt} loading="lazy" src={stopMedia.src} />
                       </div>
                       <div className="planner-timeline__body">
                         <div className="planner-timeline__time">{stop.time}</div>
-                        <h3>{sanitizePlannerCopy(stop.name)}</h3>
+                        <h3>{stopName}</h3>
                         <div className="planner-timeline__meta">
                           <span>
                             <MapPinned className="icon-4" />
-                            {sanitizePlannerCopy(stop.transport)}
+                            {stopTransport}
                           </span>
                         </div>
-                        <p>{sanitizePlannerCopy(stop.activity)}</p>
+                        <p>{stopActivity}</p>
                       </div>
-                    </div>
+                    </a>
                   </article>
                 );
               })}
