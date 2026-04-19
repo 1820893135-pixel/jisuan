@@ -37,3 +37,10 @@ test('place detail actions remove the amap jump button and simplify route copy',
   assert.doesNotMatch(mapWorkspaceSource, /高德路线详情/)
   assert.doesNotMatch(mapWorkspaceSource, /高德原生路线面板/)
 })
+
+test('walking route planning falls back to the city center when the live location is too far away', () => {
+  assert.match(mapWorkspaceSource, /function getStraightLineDistanceMeters\(/)
+  assert.match(mapWorkspaceSource, /function resolveLiveRouteOrigin\(/)
+  assert.match(mapWorkspaceSource, /mode === "walking"/)
+  assert.match(mapWorkspaceSource, /distanceToCenter > MAX_WALKING_ROUTE_ORIGIN_DISTANCE_METERS/)
+})

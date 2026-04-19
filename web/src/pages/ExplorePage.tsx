@@ -1,4 +1,4 @@
-import { CarFront, CloudSun, Footprints, Globe2, Layers3 } from 'lucide-react'
+import { CloudSun, Globe2, Layers3 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { MapWorkspace } from '../components/MapWorkspace'
@@ -138,22 +138,6 @@ export function ExplorePage() {
                 <button className="chip-button" onClick={handleBackToNational} type="button">
                   <Globe2 className="icon-4" />
                   返回全国
-                </button>
-                <button
-                  className={routeMode === 'walking' ? 'chip-button active' : 'chip-button'}
-                  onClick={() => setRouteMode('walking')}
-                  type="button"
-                >
-                  <Footprints className="icon-4" />
-                  步行优先
-                </button>
-                <button
-                  className={routeMode === 'driving' ? 'chip-button active' : 'chip-button'}
-                  onClick={() => setRouteMode('driving')}
-                  type="button"
-                >
-                  <CarFront className="icon-4" />
-                  驾车优先
                 </button>
                 <div className="map-view-switch-inline">
                   <button

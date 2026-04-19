@@ -27,10 +27,12 @@ test('map workspace removes the place switcher from the visible surface', () => 
   assert.match(appCssSource, /\.map-place-switcher\s*\{\s*display:\s*none;/)
 })
 
-test('explore page keeps route controls, view toggles, and weather in one header rail', () => {
+test('explore page keeps view toggles and weather in one header rail without top route mode buttons', () => {
   assert.match(explorePageSource, /map-mode-switch--workspace/)
   assert.match(explorePageSource, /map-view-switch-inline/)
   assert.match(explorePageSource, /map-weather-inline/)
+  assert.doesNotMatch(explorePageSource, /步行优先/)
+  assert.doesNotMatch(explorePageSource, /驾车优先/)
   assert.match(appCssSource, /\.map-weather-inline\s*\{/)
   assert.match(appCssSource, /\.map-view-switch-inline\s*\{/)
 })

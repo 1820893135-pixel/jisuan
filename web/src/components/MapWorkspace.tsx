@@ -202,6 +202,7 @@ const preferredThemeIds = new Set<DiscoveryThemeId>([
 ]);
 
 const nearbyKeyword = "文化遗产";
+const MAX_WALKING_ROUTE_ORIGIN_DISTANCE_METERS = 30000;
 
 function toGuidePlaces(pois: Poi[]): DiscoveryPlace[] {
   return pois.map((poi) => ({
@@ -539,6 +540,54 @@ function extractRouteSummary(
         steps,
       }
     : null;
+}
+
+function getStraightLineDistanceMeters(
+  origin: [number, number],
+  destination: [number, number],
+) {
+  const [lng1, lat1] = origin;
+  const [lng2, lat2] = destination;
+  const toRadians = (value: number) => (value * Math.PI) / 180;
+  const earthRadiusMeters = 6371000;
+  const deltaLat = toRadians(lat2 - lat1);
+  const deltaLng = toRadians(lng2 - lng1);
+  const normalizedLat1 = toRadians(lat1);
+  const normalizedLat2 = toRadians(lat2);
+  const haversine =
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(normalizedLat1) *
+      Math.cos(normalizedLat2) *
+      Math.sin(deltaLng / 2) ** 2;
+
+  return 2 * earthRadiusMeters * Math.asin(Math.sqrt(haversine));
+}
+
+function resolveLiveRouteOrigin({
+  center,
+  currentLocation,
+  mode,
+}: {
+  center: [number, number];
+  currentLocation: [number, number] | null;
+  mode: RouteMode;
+}) {
+  if (!currentLocation) {
+    return center;
+  }
+
+  if (mode === "walking") {
+    const distanceToCenter = getStraightLineDistanceMeters(
+      currentLocation,
+      center,
+    );
+
+    if (distanceToCenter > MAX_WALKING_ROUTE_ORIGIN_DISTANCE_METERS) {
+      return center;
+    }
+  }
+
+  return currentLocation;
 }
 
 function extractResolvedLocationDetails(
@@ -1509,12 +1558,23 @@ export function MapWorkspace({
     onRouteModeChange(mode);
     clearLiveRoute();
 
-    const origin =
-      (await requestCurrentLocation().catch(() => center)) ?? center;
+    const currentLocation =
+      (await requestCurrentLocation().catch(() => null)) ?? null;
+    const origin = resolveLiveRouteOrigin({
+      center,
+      currentLocation,
+      mode,
+    });
     const service = mode === "driving" ? state.driving : state.walking;
+    const usedCityCenterFallback =
+      mode === "walking" && currentLocation !== null && origin === center;
 
     setSearchMessage(
-      mode === "driving" ? "正在生成驾车路线" : "正在生成步行路线",
+      mode === "driving"
+        ? "正在生成驾车路线"
+        : usedCityCenterFallback
+          ? "当前位置距离当前城市较远，正在改用城市中心生成步行路线"
+          : "正在生成步行路线",
     );
 
     service.search(origin, place.location, (status, result) => {
@@ -1525,7 +1585,11 @@ export function MapWorkspace({
 
       setLiveRouteSummary(extractRouteSummary(result, mode));
       setSearchMessage(
-        mode === "driving" ? "驾车路线已生成" : "步行路线已生成",
+        mode === "driving"
+          ? "驾车路线已生成"
+          : usedCityCenterFallback
+            ? "已按当前城市中心生成步行路线"
+            : "步行路线已生成",
       );
     });
   }
