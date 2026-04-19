@@ -202,6 +202,11 @@ test('planner city resolution recognizes province aliases from user input', asyn
   assert.equal(resolvedCity, '山西省')
 })
 
+test('planner input parsing supports chinese day numerals from user messages', () => {
+  assert.match(plannerPageSource, /parsePlannerDaysFromMessage/)
+  assert.match(plannerPageSource, /\[一二两三四五六七八九十\]/)
+})
+
 test('planner greeting stays compact and planner copy hides map vendor mentions', () => {
   const greeting = getCompactPlannerGreeting(
     {

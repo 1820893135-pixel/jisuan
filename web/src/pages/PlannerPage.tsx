@@ -108,6 +108,77 @@ function pickInterests(message: string, currentInterests: string[]) {
   return next.size > 0 ? Array.from(next) : currentInterests;
 }
 
+function parsePlannerChineseNumber(token: string) {
+  const normalizedToken = token.trim();
+
+  if (!normalizedToken) {
+    return null;
+  }
+
+  const chineseNumberMap: Record<string, number> = {
+    一: 1,
+    二: 2,
+    两: 2,
+    三: 3,
+    四: 4,
+    五: 5,
+    六: 6,
+    七: 7,
+    八: 8,
+    九: 9,
+    十: 10,
+  };
+
+  if (normalizedToken in chineseNumberMap) {
+    return chineseNumberMap[normalizedToken];
+  }
+
+  if (normalizedToken === "十一") {
+    return 11;
+  }
+
+  if (normalizedToken === "十二") {
+    return 12;
+  }
+
+  if (normalizedToken.length === 2 && normalizedToken.startsWith("十")) {
+    const ones = chineseNumberMap[normalizedToken.slice(1)];
+    return ones ? 10 + ones : null;
+  }
+
+  if (normalizedToken.length === 2 && normalizedToken.endsWith("十")) {
+    const tens = chineseNumberMap[normalizedToken.slice(0, 1)];
+    return tens ? tens * 10 : null;
+  }
+
+  if (normalizedToken.length === 3 && normalizedToken[1] === "十") {
+    const tens = chineseNumberMap[normalizedToken[0]];
+    const ones = chineseNumberMap[normalizedToken[2]];
+    return tens && ones ? tens * 10 + ones : null;
+  }
+
+  return null;
+}
+
+function parsePlannerDaysFromMessage(message: string, fallbackDays: number) {
+  const dayMatch = message.match(/(\d+|[一二两三四五六七八九十]+)\s*(天|日)/);
+
+  if (!dayMatch) {
+    return fallbackDays;
+  }
+
+  const token = dayMatch[1];
+  const numericDays = /^\d+$/.test(token)
+    ? Number(token)
+    : parsePlannerChineseNumber(token);
+
+  if (!numericDays) {
+    return fallbackDays;
+  }
+
+  return Math.min(5, Math.max(1, numericDays));
+}
+
 function deriveOverrides(
   message: string,
   form: PlannerForm,
@@ -117,12 +188,13 @@ function deriveOverrides(
   const days = dayMatch
     ? Math.min(5, Math.max(1, Number(dayMatch[1]) || form.days))
     : form.days;
+  const normalizedDays = parsePlannerDaysFromMessage(message, days);
   const noteParts = [form.note, message].filter(Boolean);
 
   return {
     budget: normalizeBudget(message, form.budget),
     city: resolvePlannerCity(message, form.city, cityOptions),
-    days,
+    days: normalizedDays,
     interests: pickInterests(message, form.interests),
     note: noteParts.slice(-3).join("；"),
     style: normalizeStyle(message, form.style),
