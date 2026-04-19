@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const mapWorkspaceSource = readFileSync(resolve(currentDir, '../components/MapWorkspace.tsx'), 'utf8')
+const appCssSource = readFileSync(resolve(currentDir, '../App.css'), 'utf8')
 
 test('map workspace uses a detail toggle instead of hover-only inspector reveal', () => {
   assert.match(mapWorkspaceSource, /map-inspector-toggle/)
@@ -21,4 +22,9 @@ test('guide markers render numbers directly inside the pin instead of standalone
   assert.match(mapWorkspaceSource, /map-scene-marker__drop/)
   assert.doesNotMatch(mapWorkspaceSource, /map-scene-marker__badge/)
   assert.doesNotMatch(mapWorkspaceSource, /class="map-pin/)
+})
+
+test('guide markers use the blue droplet style for numbered points', () => {
+  assert.match(appCssSource, /\.map-scene-marker--guide\s*\{/)
+  assert.match(appCssSource, /color:\s*#3b82f6/)
 })
