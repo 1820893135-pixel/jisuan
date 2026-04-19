@@ -1,6 +1,5 @@
 ﻿import {
   CarFront,
-  ExternalLink,
   Footprints,
   LocateFixed,
   MapPinned,
@@ -712,25 +711,6 @@ function extractForecastCasts(result: unknown): WeatherForecastCast[] {
     })
     .filter((cast): cast is WeatherForecastCast => cast !== null)
     .slice(0, 3);
-}
-
-function buildNavigationUrl(
-  place: DiscoveryPlace,
-  mode: RouteMode,
-  origin: [number, number] | null,
-) {
-  const params = new URLSearchParams({
-    callnative: "1",
-    mode: mode === "driving" ? "car" : "walk",
-    src: "lvyou",
-    to: `${place.location[0]},${place.location[1]},${place.name}`,
-  });
-
-  if (origin) {
-    params.set("from", `${origin[0]},${origin[1]},My location`);
-  }
-
-  return `https://uri.amap.com/navigation?${params.toString()}`;
 }
 
 export function MapWorkspace({
@@ -1902,26 +1882,6 @@ export function MapWorkspace({
                       <CarFront className="icon-4" />
                       驾车
                     </button>
-                    <button
-                      className="chip-button"
-                      onClick={() =>
-                        window.open(
-                          buildNavigationUrl(
-                            selectedPlace,
-                            routeMode,
-                            userLocation,
-                          ),
-                          "_blank",
-                          "noopener,noreferrer",
-                        )
-                      }
-                      type="button"
-                    >
-                      <ExternalLink className="icon-4" />
-                      打开高德
-                    </button>
-                  </div>
-                  <div className="map-route-card__actions">
                     {selectedGuidePoi ? (
                       <Link
                         className="button-primary"
@@ -1999,7 +1959,7 @@ export function MapWorkspace({
             ) : null}
             <section className="map-glass-card map-route-card">
               <div className="map-results-card__head">
-                <h4>高德路线详情</h4>
+                <h4>路线详情</h4>
                 <button
                   className="section-action"
                   onClick={() => clearLiveRoute()}
@@ -2008,9 +1968,6 @@ export function MapWorkspace({
                   清空
                 </button>
               </div>
-              <p className="map-route-card__hint">
-                右上会同步展示高德原生路线面板，可直接查看分段说明与转向信息。
-              </p>
               <div ref={routePanelRef} className="map-route-panel" />
             </section>
           </aside>

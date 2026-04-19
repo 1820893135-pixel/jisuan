@@ -30,3 +30,10 @@ test('guide markers use the blue droplet style for numbered points', () => {
   assert.match(appCssSource, /\.map-scene-marker--guide\s*\{/)
   assert.match(appCssSource, /color:\s*#3b82f6/)
 })
+
+test('place detail actions remove the amap jump button and simplify route copy', () => {
+  assert.doesNotMatch(mapWorkspaceSource, /打开高德/)
+  assert.match(mapWorkspaceSource, /路线详情/)
+  assert.doesNotMatch(mapWorkspaceSource, /高德路线详情/)
+  assert.doesNotMatch(mapWorkspaceSource, /高德原生路线面板/)
+})
