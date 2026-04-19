@@ -12,6 +12,8 @@ const appLayoutSource = readFileSync(resolve(currentDir, 'components/AppLayout.t
 const authPageSource = readFileSync(resolve(currentDir, 'pages/AuthPage.tsx'), 'utf8')
 const travelAppContextSource = readFileSync(resolve(currentDir, 'context/TravelAppContext.tsx'), 'utf8')
 const appCssSource = readFileSync(resolve(currentDir, 'App.css'), 'utf8')
+const indexHtmlSource = readFileSync(resolve(currentDir, '..', 'index.html'), 'utf8')
+const faviconSource = readFileSync(resolve(currentDir, '..', 'public', 'favicon.svg'), 'utf8')
 
 test('app routes include dedicated auth pages instead of modal-only auth', () => {
   assert.match(appSource, /path="\/auth\/:mode"/)
@@ -33,6 +35,11 @@ test('top navigation uses the warm unified gold palette', () => {
 test('top navigation brand mark uses a forbidden city icon instead of the old cloud symbol', () => {
   assert.match(appLayoutSource, /forbiddenCityGrad/)
   assert.doesNotMatch(appLayoutSource, /cloudGrad/)
+})
+
+test('browser tab branding uses the new long-form heritage platform title', () => {
+  assert.match(indexHtmlSource, /<title>游迹——AI赋能的中国文化遗产导览与智能规划平台<\/title>/)
+  assert.match(faviconSource, /aria-label="游迹——AI赋能的中国文化遗产导览与智能规划平台"/)
 })
 
 test('register page removes the long persistence subtitle copy', () => {
