@@ -30,5 +30,17 @@ test('top navigation uses the warm unified gold palette', () => {
 })
 
 test('register page removes the long persistence subtitle copy', () => {
-  assert.doesNotMatch(authPageSource, /注册后就能把路线、收藏和个人偏好长期保留在自己的账号里。/)
+  assert.doesNotMatch(
+    authPageSource,
+    /注册后就能把路线、收藏和个人偏好长期保留在自己的账号里。/,
+  )
+})
+
+test('auth page keeps intro and form inside one shared frame and removes login subtitle copy', () => {
+  assert.match(authPageSource, /className="auth-page__frame"/)
+  assert.match(appCssSource, /\.auth-page__frame\s*\{/)
+  assert.doesNotMatch(
+    authPageSource,
+    /登录后可同步收藏点位、保存行程偏好，并继续使用文化遗产导览工作台。/,
+  )
 })
