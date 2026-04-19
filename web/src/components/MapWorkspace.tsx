@@ -294,7 +294,7 @@ function buildMarkerContent(
     .filter(Boolean)
     .join(" ");
 
-  return `<div class="${classNames}"><span class="map-scene-marker__badge">${getMarkerLabel(place, index)}</span><span class="map-scene-marker__drop"></span></div>`;
+  return `<div class="${classNames}"><span class="map-scene-marker__drop"><span class="map-scene-marker__label">${getMarkerLabel(place, index)}</span></span></div>`;
 }
 
 function getPlaceSecondaryLabel(place: DiscoveryPlace) {
@@ -1336,7 +1336,7 @@ export function MapWorkspace({
         title: "我的位置",
         label: {
           content:
-            '<div class="map-scene-marker map-scene-marker--me"><span class="map-scene-marker__badge">我</span><span class="map-scene-marker__drop"></span></div>',
+            '<div class="map-scene-marker map-scene-marker--me"><span class="map-scene-marker__drop"><span class="map-scene-marker__label">我</span></span></div>',
           direction: "top",
         },
       });
@@ -1640,7 +1640,7 @@ export function MapWorkspace({
           onClick={() => setIsInspectorVisible((current) => !current)}
           type="button"
         >
-          <span>详情</span>
+          <span>点击查看详情</span>
         </button>
         {!amapKey ? (
         <div className="map-shell__empty">

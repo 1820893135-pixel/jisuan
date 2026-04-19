@@ -111,7 +111,7 @@ export function AuthPage() {
   const subtitle =
     currentMode === "login"
       ? "登录后可同步收藏点位、保存行程偏好，并继续使用文化遗产导览工作台。"
-      : "注册后就能把路线、收藏和个人偏好长期保留在自己的账号里。";
+      : null;
   const passwordVisibilityToggle = getPasswordVisibilityToggleMeta(showPassword);
   const confirmPasswordVisibilityToggle =
     getPasswordVisibilityToggleMeta(showConfirmPassword);
@@ -141,7 +141,7 @@ export function AuthPage() {
         <div className="auth-page__intro">
           <span className="auth-page__kicker">账号中心</span>
           <h1>{title}</h1>
-          <p>{subtitle}</p>
+          {subtitle ? <p>{subtitle}</p> : null}
           <Link className="auth-page__back" to={from}>
             <ArrowLeft className="icon-4" />
             返回上一页
