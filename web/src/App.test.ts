@@ -30,6 +30,11 @@ test('top navigation uses the warm unified gold palette', () => {
   assert.match(appCssSource, /background:\s*linear-gradient\(135deg,\s*#fffcf0 0%,\s*#fff8e7 100%\)/)
 })
 
+test('top navigation brand mark uses a forbidden city icon instead of the old cloud symbol', () => {
+  assert.match(appLayoutSource, /forbiddenCityGrad/)
+  assert.doesNotMatch(appLayoutSource, /cloudGrad/)
+})
+
 test('register page removes the long persistence subtitle copy', () => {
   assert.doesNotMatch(
     authPageSource,

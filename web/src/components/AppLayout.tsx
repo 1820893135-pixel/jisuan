@@ -68,28 +68,65 @@ export function AppLayout() {
                 height="32"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
                 style={{ display: "block" }}
               >
                 <defs>
                   <linearGradient
-                    id="cloudGrad"
+                    id="forbiddenCityGrad"
                     x1="0%"
                     y1="0%"
                     x2="100%"
                     y2="100%"
                   >
-                    <stop offset="0%" stopColor="#b8860b" />
-                    <stop offset="100%" stopColor="#d4af37" />
+                    <stop offset="0%" stopColor="#f7d774" />
+                    <stop offset="55%" stopColor="#e0b544" />
+                    <stop offset="100%" stopColor="#b77c16" />
+                  </linearGradient>
+                  <linearGradient
+                    id="forbiddenCityShadow"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor="#f4e2a8" />
+                    <stop offset="100%" stopColor="#d79b2e" />
                   </linearGradient>
                 </defs>
                 <path
-                  d="M24 12c1.5 0 2.8-1.2 2.8-2.7 0-1.3-0.9-2.4-2.1-2.6 0-0.1 0-0.1 0-0.2 0-1.8-1.4-3.2-3.2-3.2-0.8 0-1.6 0.3-2.2 0.9C18.5 3.4 17 2.7 15.5 2.7c-2.3 0-4.2 1.9-4.2 4.2 0 0.3 0 0.5 0.1 0.8C10.4 8.1 9 9.4 9 11c0 1.7 1.3 3 3 3h12z"
-                  fill="url(#cloudGrad)"
+                  d="M5.4 10.4L16 4.4l10.6 6-1.8 1.3H7.2z"
+                  fill="url(#forbiddenCityGrad)"
                 />
                 <path
-                  d="M27 18c0-2.2-1.5-4-3.5-4.5 0.1-0.4 0.1-0.8 0.1-1.2 0-2.5-2-4.5-4.5-4.5-0.8 0-1.6 0.2-2.2 0.6-0.9-1.6-2.6-2.7-4.6-2.7-3 0-5.4 2.4-5.4 5.4 0 0.6 0.1 1.2 0.3 1.7C6.6 13.4 5 15.5 5 18c0 2.8 2.2 5 5 5h14c2.2 0 4-1.8 4-4 0-0.3 0-0.6-0.1-0.9 0.6-0.3 1.1-0.8 1.1-1.6z"
-                  fill="url(#cloudGrad)"
+                  d="M7.3 11.9h17.4l-1.5 2.2H8.8z"
+                  fill="url(#forbiddenCityShadow)"
                 />
+                <path
+                  d="M9.2 14.7h13.6c1 0 1.8 0.8 1.8 1.8V22H7.4v-5.5c0-1 0.8-1.8 1.8-1.8z"
+                  fill="url(#forbiddenCityGrad)"
+                />
+                <path
+                  d="M11.3 14.7v7.3M20.7 14.7v7.3"
+                  stroke="#f9e8bc"
+                  strokeLinecap="round"
+                  strokeWidth="1"
+                />
+                <path
+                  d="M14.1 16.2h3.8c0.7 0 1.2 0.5 1.2 1.2V22h-6.2v-4.6c0-0.7 0.5-1.2 1.2-1.2z"
+                  fill="#fff2c8"
+                />
+                <path
+                  d="M6.4 22.7h19.2l-1.8 2.8H8.2z"
+                  fill="url(#forbiddenCityShadow)"
+                />
+                <path
+                  d="M10.9 8.3h10.2"
+                  stroke="#fff1bf"
+                  strokeLinecap="round"
+                  strokeWidth="1.1"
+                />
+                <circle cx="16" cy="8.3" r="1" fill="#fff1bf" />
               </svg>
             </span>
             <span className="top-nav__brand-copy">
