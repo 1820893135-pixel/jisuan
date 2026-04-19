@@ -1,5 +1,6 @@
 import {
   startTransition,
+  useCallback,
   useEffect,
   useEffectEvent,
   useState,
@@ -193,7 +194,9 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     writeAuthToken(null)
   }
 
-  async function refreshAuthCaptcha() {
+  const clearError = useCallback(() => setError(''), [])
+
+  const refreshAuthCaptcha = useCallback(async () => {
     setAuthCaptchaLoading(true)
 
     try {
@@ -215,7 +218,7 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     } finally {
       setAuthCaptchaLoading(false)
     }
-  }
+  }, [])
 
   function openAuthDialog(mode: 'login' | 'register' = 'login') {
     setAuthModeState(mode)
@@ -229,10 +232,10 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     setError('')
   }
 
-  function setAuthMode(mode: 'login' | 'register') {
+  const setAuthMode = useCallback((mode: 'login' | 'register') => {
     setAuthModeState(mode)
     setError('')
-  }
+  }, [])
 
   async function loadGuide(city: string) {
     setLoadingGuide(true)
@@ -524,7 +527,7 @@ export function TravelAppProvider({ children }: { children: ReactNode }) {
     budgetOptions,
     cities,
     cityOptions: cities.length > 0 ? cities.map((city) => city.city) : [form.city],
-    clearError: () => setError(''),
+    clearError,
     closeAuthDialog,
     error,
     favoriteBusyPoiId,

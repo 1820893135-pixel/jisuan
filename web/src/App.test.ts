@@ -10,6 +10,7 @@ const currentDir = dirname(fileURLToPath(import.meta.url))
 const appSource = readFileSync(resolve(currentDir, 'App.tsx'), 'utf8')
 const appLayoutSource = readFileSync(resolve(currentDir, 'components/AppLayout.tsx'), 'utf8')
 const authPageSource = readFileSync(resolve(currentDir, 'pages/AuthPage.tsx'), 'utf8')
+const travelAppContextSource = readFileSync(resolve(currentDir, 'context/TravelAppContext.tsx'), 'utf8')
 const appCssSource = readFileSync(resolve(currentDir, 'App.css'), 'utf8')
 
 test('app routes include dedicated auth pages instead of modal-only auth', () => {
@@ -42,5 +43,14 @@ test('auth page keeps intro and form inside one shared frame and removes login s
   assert.doesNotMatch(
     authPageSource,
     /登录后可同步收藏点位、保存行程偏好，并继续使用文化遗产导览工作台。/,
+  )
+})
+
+test('travel app context keeps auth effect actions stable', () => {
+  assert.match(travelAppContextSource, /const clearError = useCallback\(\(\) => setError\(''\), \[]\)/)
+  assert.match(travelAppContextSource, /const refreshAuthCaptcha = useCallback\(async \(\) =>/)
+  assert.match(
+    travelAppContextSource,
+    /const setAuthMode = useCallback\(\(mode: 'login' \| 'register'\) =>/,
   )
 })
