@@ -60,8 +60,8 @@ test('top navigation brand mark uses a forbidden city icon instead of the old cl
 })
 
 test('browser tab branding uses the new long-form heritage platform title', () => {
-  assert.match(indexHtmlSource, /<title>游迹——AI赋能的中国文化遗产导览与智能规划平台<\/title>/)
-  assert.match(faviconSource, /aria-label="游迹——AI赋能的中国文化遗产导览与智能规划平台"/)
+  assert.match(indexHtmlSource, /<title>游迹—AI赋能的中国文化遗产导览与智能规划平台<\/title>/)
+  assert.match(faviconSource, /aria-label="游迹—AI赋能的中国文化遗产导览与智能规划平台"/)
 })
 
 test('app shell declares installable PWA metadata and icon assets', () => {
