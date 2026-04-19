@@ -1,5 +1,6 @@
 import {
   CalendarDays,
+  Download,
   House,
   Info,
   Landmark,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { usePwaInstallPrompt } from "../hooks/usePwaInstallPrompt";
 import { useTravelApp } from "../context/useTravelApp";
 
 const navItems: Array<{
@@ -28,6 +30,7 @@ const navItems: Array<{
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { canInstall, promptInstall } = usePwaInstallPrompt();
   const {
     authDialogOpen,
     authMode,
@@ -156,6 +159,18 @@ export function AppLayout() {
           </nav>
 
           <div className="top-nav__actions">
+            {canInstall ? (
+              <button
+                className="button-secondary top-nav__install"
+                onClick={() => {
+                  void promptInstall();
+                }}
+                type="button"
+              >
+                <Download className="icon-4" />
+                <span>安装应用</span>
+              </button>
+            ) : null}
             {user ? (
               <div className="top-nav__user">
                 <NavLink className="top-nav__profile" to="/profile">

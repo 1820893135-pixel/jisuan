@@ -1,0 +1,54 @@
+{
+  "id": "/",
+  "name": "游迹——AI赋能的中国文化遗产导览与智能规划平台",
+  "short_name": "游迹导览",
+  "description": "围绕中国文化遗产的真实地图导览、行程规划与城市探索应用。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff8e7",
+  "theme_color": "#7f1d1d",
+  "icons": [
+    {
+      "src": "/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "打开地图工作台",
+      "short_name": "地图",
+      "url": "/map?scope=national",
+      "icons": [
+        {
+          "src": "/pwa-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "打开 AI 行程规划",
+      "short_name": "行程",
+      "url": "/itinerary",
+      "icons": [
+        {
+          "src": "/pwa-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

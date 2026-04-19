@@ -119,6 +119,10 @@
   justify-content: flex-end;
 }
 
+.top-nav__install {
+  white-space: nowrap;
+}
+
 .top-nav__auth,
 .top-nav__user {
   justify-content: flex-end;
