@@ -3431,16 +3431,19 @@
 
 .planner-chat-card {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 1rem;
   padding: 1.5rem;
+  max-height: min(72vh, 42rem);
+  overflow: hidden;
 }
 
 .planner-chat-thread {
   display: grid;
   gap: 0.85rem;
-  min-height: 18rem;
-  max-height: none;
-  overflow: visible;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0.25rem 0.2rem 0.25rem 0;
 }
 
@@ -3595,8 +3598,11 @@
 
 .planner-memory-card {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0.9rem;
   padding: 1.5rem;
+  max-height: min(72vh, 42rem);
+  overflow: hidden;
   position: static;
 }
 
@@ -3627,6 +3633,11 @@
 .planner-history-stack {
   display: grid;
   gap: 0.75rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.2rem;
+  align-content: start;
 }
 
 .planner-history-stack h3 {
@@ -4129,6 +4140,16 @@
 
   .planner-chat-layout {
     grid-template-columns: 1fr;
+  }
+
+  .planner-chat-card,
+  .planner-memory-card {
+    max-height: none;
+  }
+
+  .planner-chat-thread,
+  .planner-history-stack {
+    overflow: visible;
   }
 
   .profile-settings-grid {

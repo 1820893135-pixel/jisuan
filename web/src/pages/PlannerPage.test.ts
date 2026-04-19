@@ -161,14 +161,30 @@ test('planner history panel hides the auto-save status copy', () => {
   assert.doesNotMatch(plannerPageSource, /自动保存/)
 })
 
-test('planner chat and history panels scroll with the page instead of inner panes', () => {
+test('planner chat and history panels cap their height and scroll inside the cards', () => {
+  const chatCardBlocks = Array.from(appCssSource.matchAll(/\.planner-chat-card\s*\{[\s\S]*?\n\}/g))
   const chatThreadBlock = appCssSource.match(/\.planner-chat-thread\s*\{[\s\S]*?\n\}/)
-  const memoryCardBlock = appCssSource.match(/\.planner-memory-card\s*\{[\s\S]*?\n\}/)
+  const historyStackBlock = appCssSource.match(/\.planner-history-stack\s*\{[\s\S]*?\n\}/)
+  const memoryCardBlocks = Array.from(
+    appCssSource.matchAll(/\.planner-memory-card\s*\{[\s\S]*?\n\}/g),
+  )
+  const chatCardBlock = chatCardBlocks.find((block) =>
+    /grid-template-rows:\s*auto minmax\(0,\s*1fr\) auto/.test(block[0]),
+  )
+  const memoryCardBlock = memoryCardBlocks.find((block) =>
+    /grid-template-rows:\s*auto minmax\(0,\s*1fr\)/.test(block[0]),
+  )
 
+  assert.ok(chatCardBlock, 'expected planner chat card styles to exist')
   assert.ok(chatThreadBlock, 'expected planner chat thread styles to exist')
+  assert.ok(historyStackBlock, 'expected planner history stack styles to exist')
   assert.ok(memoryCardBlock, 'expected planner memory card styles to exist')
-  assert.doesNotMatch(chatThreadBlock[0], /overflow-y:\s*auto/)
-  assert.doesNotMatch(chatThreadBlock[0], /max-height:\s*38rem/)
+  assert.match(chatCardBlock[0], /grid-template-rows:\s*auto minmax\(0,\s*1fr\) auto/)
+  assert.match(chatCardBlock[0], /max-height:\s*min\(72vh,\s*42rem\)/)
+  assert.match(chatCardBlock[0], /overflow:\s*hidden/)
+  assert.match(chatThreadBlock[0], /overflow-y:\s*auto/)
+  assert.match(historyStackBlock[0], /overflow-y:\s*auto/)
+  assert.match(memoryCardBlock[0], /max-height:\s*min\(72vh,\s*42rem\)/)
   assert.doesNotMatch(memoryCardBlock[0], /position:\s*sticky/)
 })
 
