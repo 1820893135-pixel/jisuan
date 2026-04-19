@@ -72,3 +72,42 @@ test('clearPlannerChatMessages removes persisted planner conversation', () => {
     assert.deepEqual(readPlannerChatMessages(), [])
   })
 })
+
+test('readPlannerChatMessages merges legacy assistant text and standalone summary card records', () => {
+  withMockWindow(() => {
+    writePlannerChatMessages([
+      {
+        createdAt: '2026-04-18T08:00:00.000Z',
+        id: 'assistant-text',
+        role: 'assistant',
+        text: '这是旧版单独保存的规划说明',
+      },
+      {
+        createdAt: '2026-04-18T08:00:01.000Z',
+        id: 'assistant-card',
+        role: 'assistant',
+        summaryCard: {
+          budget: '2000-3000',
+          city: '北京市',
+          days: 3,
+          interests: ['历史古迹'],
+          note: '少赶路',
+          requestSummary: '北京市 · 3天 · 沉浸文化',
+          stops: ['故宫博物院', '天坛公园'],
+          style: '沉浸文化',
+          targetId: 'planner-itinerary-anchor',
+          title: '北京市3天行程概览',
+        },
+        text: '北京市 · 3天 · 沉浸文化',
+        variant: 'summary-card',
+      },
+    ])
+
+    const messages = readPlannerChatMessages()
+
+    assert.equal(messages.length, 1)
+    assert.equal(messages[0]?.text, '这是旧版单独保存的规划说明')
+    assert.equal(messages[0]?.summaryCard?.city, '北京市')
+    assert.equal(messages[0]?.variant, 'summary-card')
+  })
+})

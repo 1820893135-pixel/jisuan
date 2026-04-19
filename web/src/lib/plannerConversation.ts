@@ -35,6 +35,24 @@ export function buildPlannerThinkingStream(result: PlannerGenerationResult) {
   )
 }
 
+export function buildPlannerReplyMessage(result: PlannerGenerationResult) {
+  const firstDay = result.itinerary.dailyPlan[0]
+  const firstStops =
+    firstDay?.stops
+      .map((stop) => sanitizePlannerCopy(stop.name))
+      .filter(Boolean)
+      .slice(0, 4)
+      .join('、') ?? '我已经先把主线顺序压好了'
+
+  return sanitizePlannerCopy(
+    [
+      buildPlannerThinkingStream(result),
+      `行程建议：${sanitizePlannerCopy(result.itinerary.overview)}`,
+      `落地安排：第1天先走${sanitizePlannerCopy(firstDay?.theme ?? '城市主线')}，重点看${firstStops}。点下面这张行程卡，就能直接跳到下方正文查看完整路线。`,
+    ].join('\n\n'),
+  )
+}
+
 export function buildPlannerSummaryCard(
   result: PlannerGenerationResult,
   targetId: string,

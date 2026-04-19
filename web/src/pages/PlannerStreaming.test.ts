@@ -14,6 +14,8 @@ test('planner page renders a typed thinking block and clickable summary card ent
   assert.match(plannerPageSource, /planner-chat-message--card/)
   assert.match(plannerPageSource, /scrollToItinerarySection/)
   assert.match(plannerPageSource, /planner-summary-card/)
+  assert.match(plannerPageSource, /planner-history-item planner-summary-card/)
+  assert.doesNotMatch(plannerPageSource, /createSummaryCardMessage/)
   assert.doesNotMatch(plannerPageSource, /openAuthDialog\('login'\)/)
   assert.doesNotMatch(plannerPageSource, /openAuthDialog\('register'\)/)
 })

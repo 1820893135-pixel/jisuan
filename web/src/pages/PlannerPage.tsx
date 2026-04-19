@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 import { getItineraryStopMedia } from "../content/heritageMedia";
 import { useTravelApp } from "../context/useTravelApp";
 import {
+  buildPlannerReplyMessage,
   buildPlannerSummaryCard,
   buildPlannerThinkingPrelude,
-  buildPlannerThinkingStream,
 } from "../lib/plannerConversation";
 import {
   readPlannerChatMessages,
@@ -27,7 +27,6 @@ import type {
   PlannerChatMessage,
   PlannerForm,
   PlannerGenerationResult,
-  PlannerSummaryCard,
 } from "../types";
 
 const plannerAssistantName = "文脉行程师";
@@ -45,13 +44,6 @@ function createMessage(
     text,
     ...options,
   };
-}
-
-function createSummaryCardMessage(summaryCard: PlannerSummaryCard) {
-  return createMessage("assistant", summaryCard.requestSummary, {
-    summaryCard,
-    variant: "summary-card",
-  });
 }
 
 function normalizeBudget(message: string, currentBudget: string) {
@@ -135,22 +127,6 @@ function deriveOverrides(
     note: noteParts.slice(-3).join("；"),
     style: normalizeStyle(message, form.style),
   };
-}
-
-function buildAssistantReply(result: PlannerGenerationResult) {
-  const firstDay = result.itinerary.dailyPlan[0];
-  const firstStops =
-    firstDay?.stops.map((stop) => sanitizePlannerCopy(stop.name)).join("、") ??
-    "我已经先整理好了主线";
-
-  return [
-    `我先按 ${result.form.city} ${result.form.days} 天来帮你规划，预算参考 ${result.form.budget}，路线风格偏 ${result.form.style}。`,
-    sanitizePlannerCopy(result.itinerary.overview),
-    `第一天我会从 ${firstDay?.theme ?? "城市主线"} 开始，重点放在 ${firstStops}。`,
-    "下面这张详情卡已经把你的城市、天数和主线景点压缩好了，点一下就能直接跳到行程正文。",
-  ]
-    .map((section) => sanitizePlannerCopy(section))
-    .join("\n\n");
 }
 
 function createGreetingMessage(
@@ -338,18 +314,27 @@ function AuthenticatedPlannerWorkspace() {
       return;
     }
 
+    const summaryCard = buildPlannerSummaryCard(result, itineraryAnchorId);
+    const replyText = buildPlannerReplyMessage(result);
+
     activeThinkingTargetsRef.current[thinkingMessage.id] = {
       complete: true,
-      text: buildPlannerThinkingStream(result),
+      text: replyText,
     };
     await streamPromise;
 
-    const summaryCard = buildPlannerSummaryCard(result, itineraryAnchorId);
-    setMessages((current) => [
-      ...current,
-      createMessage("assistant", buildAssistantReply(result)),
-      createSummaryCardMessage(summaryCard),
-    ]);
+    setMessages((current) =>
+      current.map((message) =>
+        message.id === thinkingMessage.id
+          ? {
+              ...message,
+              summaryCard,
+              text: replyText,
+              variant: "summary-card",
+            }
+          : message,
+      ),
+    );
     setIsStreaming(false);
   }
 
@@ -367,15 +352,20 @@ function AuthenticatedPlannerWorkspace() {
       itinerary: historyEntry.itinerary,
       source: "history-memory",
     };
+    const summaryCard = buildPlannerSummaryCard(
+      restoredResult,
+      itineraryAnchorId,
+    );
 
     setMessages((current) => [
       ...current,
       createMessage(
         "assistant",
-        `我已经帮你恢复 ${historyEntry.guide.city} 的历史方案：${historyEntry.itinerary.title}。预算还是 ${historyEntry.form.budget}，偏好保留 ${historyEntry.form.interests.join("、")}。`,
-      ),
-      createSummaryCardMessage(
-        buildPlannerSummaryCard(restoredResult, itineraryAnchorId),
+        buildPlannerReplyMessage(restoredResult),
+        {
+          summaryCard,
+          variant: "summary-card",
+        },
       ),
     ]);
   }
@@ -396,35 +386,6 @@ function AuthenticatedPlannerWorkspace() {
 
           <div ref={threadRef} className="planner-chat-thread">
             {threadMessages.map((message) => {
-              if (message.variant === "summary-card" && message.summaryCard) {
-                return (
-                  <article
-                    key={message.id}
-                    className="planner-chat-message planner-chat-message--assistant planner-chat-message--card"
-                  >
-                    <span className="planner-chat-message__role">
-                      {plannerAssistantName}
-                    </span>
-                    <button
-                      className="planner-summary-card"
-                      onClick={() =>
-                        scrollToItinerarySection(message.summaryCard?.targetId)
-                      }
-                      type="button"
-                    >
-                      <div className="planner-summary-card__head">
-                        <strong>{message.summaryCard.title}</strong>
-                        <span>详情</span>
-                      </div>
-                      <p>{message.summaryCard.requestSummary}</p>
-                      <small>
-                        景点：{message.summaryCard.stops.join("、") || "待补充"}
-                      </small>
-                    </button>
-                  </article>
-                );
-              }
-
               const displayText =
                 message.role === "assistant"
                   ? isLegacyPlannerGreeting(message.text)
@@ -439,6 +400,7 @@ function AuthenticatedPlannerWorkspace() {
                       message.variant === "thinking"
                         ? "planner-chat-message--thinking"
                         : "",
+                      message.summaryCard ? "planner-chat-message--card" : "",
                     ]
                       .filter(Boolean)
                       .join(" ")
@@ -450,6 +412,31 @@ function AuthenticatedPlannerWorkspace() {
                     {message.role === "assistant" ? plannerAssistantName : "你"}
                   </span>
                   <p>{displayText}</p>
+                  {message.summaryCard && message.role === "assistant" ? (
+                    <button
+                      className="planner-history-item planner-summary-card"
+                      onClick={() =>
+                        scrollToItinerarySection(message.summaryCard?.targetId)
+                      }
+                      type="button"
+                    >
+                      <div className="planner-summary-card__head">
+                        <strong>{message.summaryCard.city}</strong>
+                        <span>查看路线</span>
+                      </div>
+                      <div className="planner-summary-card__meta">
+                        <span>
+                          <CalendarDays className="icon-4" />
+                          {message.summaryCard.days} 天
+                        </span>
+                        <span>{message.summaryCard.style}</span>
+                      </div>
+                      <small>{message.summaryCard.requestSummary}</small>
+                      <small>
+                        主线：{message.summaryCard.stops.join("、") || "待补充"}
+                      </small>
+                    </button>
+                  ) : null}
                 </article>
               );
             })}
@@ -481,43 +468,11 @@ function AuthenticatedPlannerWorkspace() {
         <aside className="planner-memory-card">
           <div className="section-header planner-panel__header">
             <div>
-              <h2>当前规划</h2>
-              <p className="map-summary__hint">这里展示你最近一次确认的规划条件。</p>
+              <h2>历史规划</h2>
             </div>
-          </div>
-
-          <div className="planner-memory-grid">
-            <div className="summary-tile">
-              <span>目的地</span>
-              <strong>{guide?.city ?? form.city}</strong>
-            </div>
-            <div className="summary-tile">
-              <span>天数</span>
-              <strong>{form.days} 天</strong>
-            </div>
-            <div className="summary-tile">
-              <span>预算</span>
-              <strong>{form.budget}</strong>
-            </div>
-            <div className="summary-tile">
-              <span>风格</span>
-              <strong>{form.style}</strong>
-            </div>
-          </div>
-
-          <div className="planner-memory-tags">
-            {form.interests.map((interest) => (
-              <span key={interest} className="planner-memory-chip">
-                {interest}
-              </span>
-            ))}
           </div>
 
           <div className="planner-history-stack">
-            <div className="section-header planner-panel__header">
-              <h3>历史规划</h3>
-            </div>
-
             {itineraryHistory.length > 0 ? (
               itineraryHistory.map((entry) => (
                 <button

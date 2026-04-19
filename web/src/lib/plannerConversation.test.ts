@@ -45,11 +45,14 @@ test('planner conversation helpers build typed thinking copy and summary cards',
   }
 
   const thinking = plannerConversation.buildPlannerThinkingStream(result)
+  const reply = plannerConversation.buildPlannerReplyMessage(result)
   const card = plannerConversation.buildPlannerSummaryCard(result, 'planner-itinerary-anchor')
 
   assert.match(thinking, /云南/)
   assert.match(thinking, /3天/)
   assert.match(thinking, /大理古城/)
+  assert.match(reply, /行程建议：/)
+  assert.match(reply, /点下面这张行程卡/)
   assert.equal(card.targetId, 'planner-itinerary-anchor')
   assert.equal(card.city, '云南')
   assert.equal(card.days, 3)

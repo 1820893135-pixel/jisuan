@@ -104,8 +104,10 @@ function createMockStore(overrides: Partial<TravelAppStore> = {}): TravelAppStor
 
 test('planner page uses planning-focused assistant copy', () => {
   assert.match(plannerPageSource, /文脉行程师/)
-  assert.match(plannerPageSource, /当前规划/)
   assert.match(plannerPageSource, /历史规划/)
+  assert.doesNotMatch(plannerPageSource, /当前规划/)
+  assert.doesNotMatch(plannerPageSource, /planner-memory-grid/)
+  assert.doesNotMatch(plannerPageSource, /planner-memory-tags/)
   assert.doesNotMatch(plannerPageSource, /智能行程/)
   assert.doesNotMatch(plannerPageSource, /智能规划助手/)
 
