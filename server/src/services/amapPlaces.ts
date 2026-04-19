@@ -543,10 +543,11 @@ export async function searchProvinceHighlights(
   limit = 6,
 ) {
   const meta = resolveProvinceMeta(provinceName);
+  const scopeName = provinceName.trim() || meta.city;
   const keyword = keywords?.trim();
   const records = keyword
-    ? await searchProvinceKeyword(meta.city, keyword, Math.max(limit, 6))
-    : (await collectProvincePlaces(meta.city)).map((item) => item.raw);
+    ? await searchProvinceKeyword(scopeName, keyword, Math.max(limit, 6))
+    : (await collectProvincePlaces(scopeName)).map((item) => item.raw);
 
   return records
     .map((record) => {
@@ -582,16 +583,18 @@ export async function searchProvinceHighlights(
 
 export async function getProvinceGuide(cityOrProvince?: string): Promise<CityGuide> {
   const meta = resolveProvinceMeta(cityOrProvince);
-  const cacheKey = meta.city;
+  const scopeName = cityOrProvince?.trim() || meta.city;
+  const cacheKey = scopeName.toLowerCase();
 
   if (!provinceGuideCache.has(cacheKey)) {
-    const promise = collectProvincePlaces(meta.city)
+    const promise = collectProvincePlaces(scopeName)
       .then((places) => {
-        const pois = places.slice(0, 6).map((place) => toProvincePoi(meta.city, place));
+        const pois = places.slice(0, 6).map((place) => toProvincePoi(scopeName, place));
+        const center = parseCoordinates(places[0]?.raw.location) ?? meta.center;
 
         return {
-          center: meta.center,
-          city: meta.city,
+          center,
+          city: scopeName,
           pois,
           slogan: meta.slogan,
           story: meta.narrative,
@@ -614,10 +617,11 @@ export async function getProvinceMapDiscovery(
   cityOrProvince?: string,
 ): Promise<CityMapDiscovery> {
   const meta = resolveProvinceMeta(cityOrProvince);
-  const cacheKey = meta.city;
+  const scopeName = cityOrProvince?.trim() || meta.city;
+  const cacheKey = scopeName.toLowerCase();
 
   if (!provinceDiscoveryCache.has(cacheKey)) {
-    const promise = getProvinceGuide(meta.city)
+    const promise = getProvinceGuide(scopeName)
       .then((guide) => {
         const items = guide.pois.map<MapDiscoveryItem>((poi) => ({
           amapPoiId: poi.amapPoiId ?? poi.id,
@@ -644,7 +648,7 @@ export async function getProvinceMapDiscovery(
         }));
 
         return {
-          city: meta.city,
+          city: scopeName,
           headline: `高德已补全 ${meta.city} 的代表性景点、博物馆和街区线索，可直接切换主题观察省域景点分布。`,
           items,
           themes,

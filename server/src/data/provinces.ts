@@ -397,6 +397,65 @@ const provinceByName = new Map(
   provinceCatalog.map((province) => [province.city.toLowerCase(), province]),
 );
 
+const representativeProvinceAliases = new Map<string, string[]>([
+  [
+    "江苏省",
+    [
+      "苏州",
+      "苏州市",
+      "江苏苏州",
+      "江苏苏州市",
+      "无锡",
+      "无锡市",
+      "扬州",
+      "扬州市",
+      "周庄",
+      "同里",
+    ],
+  ],
+  [
+    "浙江省",
+    [
+      "杭州",
+      "杭州市",
+      "绍兴",
+      "绍兴市",
+      "乌镇",
+      "西塘",
+      "宁波",
+      "宁波市",
+      "嘉兴",
+      "嘉兴市",
+    ],
+  ],
+  [
+    "福建省",
+    ["厦门", "厦门市", "泉州", "泉州市", "福州", "福州市", "武夷山"],
+  ],
+  [
+    "江西省",
+    ["景德镇", "景德镇市", "婺源", "上饶", "上饶市"],
+  ],
+  [
+    "河南省",
+    ["洛阳", "洛阳市", "开封", "开封市", "安阳", "安阳市", "登封"],
+  ],
+  [
+    "山东省",
+    ["青岛", "青岛市", "曲阜", "泰安", "泰安市", "济宁", "济宁市"],
+  ],
+  ["山西省", ["平遥", "大同", "大同市"]],
+  ["陕西省", ["西安", "西安市", "咸阳", "咸阳市"]],
+  [
+    "四川省",
+    ["成都", "成都市", "乐山", "乐山市", "峨眉山", "都江堰"],
+  ],
+  [
+    "云南省",
+    ["昆明", "昆明市", "大理", "大理市", "丽江", "丽江市", "香格里拉", "西双版纳"],
+  ],
+]);
+
 const provinceAliases = new Map<string, string>(
   provinceCatalog.flatMap((province) => {
     const aliases = new Set<string>([
@@ -429,7 +488,19 @@ export function resolveProvinceMeta(query?: string) {
   }
 
   const normalized = query.trim().toLowerCase();
-  const provinceName = provinceAliases.get(normalized) ?? normalized;
+  const compactQuery = normalized.replace(/\s+/g, "");
+  const representativeProvinceName = [...representativeProvinceAliases.entries()].find(
+    ([, aliases]) =>
+      aliases.some((alias) => {
+        const normalizedAlias = alias.toLowerCase();
+        return compactQuery === normalizedAlias || compactQuery.includes(normalizedAlias);
+      }),
+  )?.[0];
+  const provinceName =
+    provinceAliases.get(compactQuery) ??
+    provinceAliases.get(compactQuery.replace(/省|市|壮族自治区|回族自治区|维吾尔自治区|自治区|特别行政区/g, "")) ??
+    representativeProvinceName ??
+    compactQuery;
   return provinceByName.get(provinceName) ?? provinceCatalog[0];
 }
 
