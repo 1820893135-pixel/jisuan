@@ -161,6 +161,17 @@ test('planner history panel hides the auto-save status copy', () => {
   assert.doesNotMatch(plannerPageSource, /自动保存/)
 })
 
+test('planner chat and history panels scroll with the page instead of inner panes', () => {
+  const chatThreadBlock = appCssSource.match(/\.planner-chat-thread\s*\{[\s\S]*?\n\}/)
+  const memoryCardBlock = appCssSource.match(/\.planner-memory-card\s*\{[\s\S]*?\n\}/)
+
+  assert.ok(chatThreadBlock, 'expected planner chat thread styles to exist')
+  assert.ok(memoryCardBlock, 'expected planner memory card styles to exist')
+  assert.doesNotMatch(chatThreadBlock[0], /overflow-y:\s*auto/)
+  assert.doesNotMatch(chatThreadBlock[0], /max-height:\s*38rem/)
+  assert.doesNotMatch(memoryCardBlock[0], /position:\s*sticky/)
+})
+
 test('planner city resolution recognizes province aliases from user input', async () => {
   const plannerPageHelpersModule = await import('../lib/plannerPageHelpers.ts')
 
