@@ -117,6 +117,13 @@ test('install prompt icon metadata busts cached manifest and icon URLs after art
   assert.doesNotMatch(serviceWorkerSource, /const CACHE_NAME = 'lvyou-shell-v1'/)
 })
 
+test('windows favicon.ico is rebuilt from the new artwork instead of the legacy rounded-square icon', () => {
+  assert.ok(
+    statSync(faviconIcoPath).size > 50000,
+    'favicon.ico should include the refreshed multi-size install artwork, not the old compact icon',
+  )
+})
+
 test('app shell registers the service worker and exposes an install entry point', () => {
   assert.match(mainSource, /navigator\.serviceWorker\.register\('\/sw\.js'/)
   assert.match(appLayoutSource, /安装应用/)
