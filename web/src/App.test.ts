@@ -65,10 +65,10 @@ test('browser tab branding uses the new long-form heritage platform title', () =
 })
 
 test('app shell declares installable PWA metadata and icon assets', () => {
-  assert.match(indexHtmlSource, /rel="icon"\s+href="\/favicon\.ico"\s+sizes="any"/)
-  assert.match(indexHtmlSource, /rel="manifest"\s+href="\/manifest\.webmanifest"/)
+  assert.match(indexHtmlSource, /rel="icon"\s+href="\/favicon\.ico\?v=20260424"\s+sizes="any"/)
+  assert.match(indexHtmlSource, /rel="manifest"\s+href="\/manifest\.webmanifest\?v=20260424"/)
   assert.match(indexHtmlSource, /name="theme-color"\s+content="#7f1d1d"/)
-  assert.match(indexHtmlSource, /rel="apple-touch-icon"\s+href="\/apple-touch-icon\.png"/)
+  assert.match(indexHtmlSource, /rel="apple-touch-icon"\s+href="\/apple-touch-icon\.png\?v=20260424"/)
 
   assert.ok(existsSync(faviconIcoPath), 'expected a Windows favicon.ico asset')
   assert.ok(existsSync(pwa44IconPath), 'expected a 44px Windows app icon asset')
@@ -96,14 +96,25 @@ test('public PWA assets define an installable heritage manifest and offline shel
   assert.match(manifestSource, /"start_url"\s*:\s*"\/"/)
   assert.match(manifestSource, /"display"\s*:\s*"standalone"/)
   assert.match(manifestSource, /"theme_color"\s*:\s*"#7f1d1d"/)
-  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-44\.png"/)
-  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-71\.png"/)
-  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-150\.png"/)
-  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-256\.png"/)
-  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-310\.png"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-44\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-71\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-150\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-256\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-310\.png\?v=20260424"/)
   assert.match(serviceWorkerSource, /self\.addEventListener\('install'/)
   assert.match(serviceWorkerSource, /self\.addEventListener\('fetch'/)
   assert.match(serviceWorkerSource, /manifest\.webmanifest/)
+})
+
+test('install prompt icon metadata busts cached manifest and icon URLs after artwork updates', () => {
+  assert.match(indexHtmlSource, /rel="manifest"\s+href="\/manifest\.webmanifest\?v=20260424"/)
+  assert.match(indexHtmlSource, /rel="apple-touch-icon"\s+href="\/apple-touch-icon\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-192\.png\?v=20260424"/)
+  assert.match(manifestSource, /"src"\s*:\s*"\/pwa-512\.png\?v=20260424"/)
+  assert.match(serviceWorkerSource, /const CACHE_NAME = 'lvyou-shell-v2'/)
+  assert.match(serviceWorkerSource, /'\/manifest\.webmanifest\?v=20260424'/)
+  assert.match(serviceWorkerSource, /'\/pwa-192\.png\?v=20260424'/)
+  assert.doesNotMatch(serviceWorkerSource, /const CACHE_NAME = 'lvyou-shell-v1'/)
 })
 
 test('app shell registers the service worker and exposes an install entry point', () => {

@@ -1,17 +1,17 @@
-const CACHE_NAME = 'lvyou-shell-v1'
+const CACHE_NAME = 'lvyou-shell-v2'
 const SHELL_ASSETS = [
   '/',
-  '/favicon.ico',
-  '/manifest.webmanifest',
-  '/favicon.svg',
-  '/pwa-44.png',
-  '/pwa-71.png',
-  '/pwa-150.png',
-  '/pwa-192.png',
-  '/pwa-256.png',
-  '/pwa-310.png',
-  '/pwa-512.png',
-  '/apple-touch-icon.png',
+  '/favicon.ico?v=20260424',
+  '/manifest.webmanifest?v=20260424',
+  '/favicon.svg?v=20260424',
+  '/pwa-44.png?v=20260424',
+  '/pwa-71.png?v=20260424',
+  '/pwa-150.png?v=20260424',
+  '/pwa-192.png?v=20260424',
+  '/pwa-256.png?v=20260424',
+  '/pwa-310.png?v=20260424',
+  '/pwa-512.png?v=20260424',
+  '/apple-touch-icon.png?v=20260424',
 ]
 
 self.addEventListener('install', (event) => {
